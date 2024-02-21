@@ -12,7 +12,7 @@ class Title extends Phaser.Scene {
     }
 
     create() {
-        
+        this.title = this.add.sprite(game.config.width/2, game.config.height/2, 'fight')
     }
 
     update() {
