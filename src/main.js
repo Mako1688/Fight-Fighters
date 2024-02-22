@@ -11,7 +11,7 @@ Approx hours:
 
 let config = {
     type: Phaser.AUTO,
-    width: 900,
+    width: 920,
     height: 640,
     pixelArt: true,
     scale: {
@@ -36,7 +36,13 @@ let game = new Phaser.Game(config)
 let { width, height } = game.config
 
 //reserve key bindings
+let keySPACE
 
+//P1 binds
+let p1Left, p1Right, p1Down, p1Punch, p1Kick, p1Special, p1Block
+
+//P2 binds
+let p2Left, p2Right, p2Down, p2Punch, p2Kick, p2Special, p2Block
 
 //set music boolean
 let musicPlaying = false
