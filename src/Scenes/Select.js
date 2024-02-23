@@ -53,6 +53,10 @@ class Select extends Phaser.Scene {
         this.p1Karate = false
         this.p2Karate = false
 
+        //selection bools
+        this.p1select = false
+        this.p2select = false
+
     }
 
     update() {
@@ -164,6 +168,29 @@ class Select extends Phaser.Scene {
         }
 
 
+        if(p1Punch.isDown || p1Kick.isDown || p1Special.isDown || p1Block.isDown) {
+            //play sound
+            //disable movemonet
+            this.input.keyboard.removeKey('A', 'D', 'R', 'T', 'F', 'G')
+            this.p1select = true
+        }
+
+        if(p2Punch.isDown || p2Kick.isDown || p2Special.isDown || p2Block.isDown) {
+            //play sound
+            //disable movemonet
+            this.input.keyboard.removeCapture('LEFT, RIGHT, L, COLON, COMMA, PERIOD')
+            this.p2select = true
+        }
+
+        if(this.p1select == true && this.p2select == true) {
+            this.input.keyboard.addCapture('A,D,R,T,F,G,LEFT, RIGHT, L, COLON, COMMA, PERIOD')
+            this.scene.start('playScene', {
+                p1Karate: this.p1Karate,
+                p1Rumble: this.p1Rumble,
+                p2Karate: this.p2Karate,
+                p2Rumble: this.p2Rumble,
+            })
+        }
 
     }
 }
