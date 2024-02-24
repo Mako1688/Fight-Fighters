@@ -23,6 +23,7 @@ class Load extends Phaser.Scene {
         this.load.image('Karate Name', './assets/Sprites/Karate Name.png')
         this.load.image('Rumble Portrait', './assets/Sprites/Rumble Portrait.png')
         this.load.image('Rumble Name', './assets/Sprites/Rumble Name.png')
+        this.load.image('airplane', './assets/Sprites/Airplane.png')
 
         //load spritesheets
         this.load.spritesheet('p1_cursor_sheet', './assets/SpriteSheets/p1 cursor sheet.png', {

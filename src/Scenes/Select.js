@@ -15,6 +15,9 @@ class Select extends Phaser.Scene {
         //place background
         this.background = this.add.sprite(0, 0, 'worldmap').setOrigin(0)
 
+        //create airplane
+        this.airplane = this.add.sprite(618, 225, 'airplane').setAlpha(0).setOrigin(0.5, 0.5).setScale(2)
+
         //place character slect
         this.select = this.add.sprite(game.config.width / 2, game.config.height / 4 * 3, 'characters_select')
 
@@ -44,7 +47,7 @@ class Select extends Phaser.Scene {
         p2Right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
         p2Punch = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L)
         p2Kick = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.COMMA)
-        p2Special = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.COLON)
+        p2Special = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEMICOLON)
         p2Block = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PERIOD)
 
         //set charcater selection bools
@@ -171,24 +174,79 @@ class Select extends Phaser.Scene {
         if(p1Punch.isDown || p1Kick.isDown || p1Special.isDown || p1Block.isDown) {
             //play sound
             //disable movemonet
-            this.input.keyboard.removeKey('A', 'D', 'R', 'T', 'F', 'G')
+            p1Left.enabled = false
+            p1Right.enabled = false
+            p1Punch.enabled = false
+            p1Kick.enabled = false
+            p1Special.enabled = false
+            p1Block.enabled = false
             this.p1select = true
         }
 
         if(p2Punch.isDown || p2Kick.isDown || p2Special.isDown || p2Block.isDown) {
             //play sound
             //disable movemonet
-            this.input.keyboard.removeCapture('LEFT, RIGHT, L, COLON, COMMA, PERIOD')
+            p2Left.enabled = false
+            p2Right.enabled = false
+            p2Punch.enabled = false
+            p2Kick.enabled = false
+            p2Special.enabled = false
+            p2Block.enabled = false
+
+
             this.p2select = true
         }
 
-        if(this.p1select == true && this.p2select == true) {
-            this.input.keyboard.addCapture('A,D,R,T,F,G,LEFT, RIGHT, L, COLON, COMMA, PERIOD')
-            this.scene.start('playScene', {
-                p1Karate: this.p1Karate,
-                p1Rumble: this.p1Rumble,
-                p2Karate: this.p2Karate,
-                p2Rumble: this.p2Rumble,
+        if (this.p1select && this.p2select) {
+            // Disable controls during animation
+            p1Left.enabled = false
+            p1Right.enabled = false
+            p1Punch.enabled = false
+            p1Kick.enabled = false
+            p1Special.enabled = false
+            p1Block.enabled = false
+            p2Left.enabled = false
+            p2Right.enabled = false
+            p2Punch.enabled = false
+            p2Kick.enabled = false
+            p2Special.enabled = false
+            p2Block.enabled = false
+
+            this.airplane.setAlpha(1)
+    
+            // Create a tween to move the airplane
+            var tween = this.tweens.add({
+                targets: this.airplane,
+                x: 400,
+                y: 226,
+                duration: 1000,
+                ease: 'Linear',
+                onComplete: function () {
+                    // Code to execute after the tween is complete
+                    console.log('Movement complete!')
+    
+                    // Enable controls again
+                    p1Left.enabled = true
+                    p1Right.enabled = true
+                    p1Punch.enabled = true
+                    p1Kick.enabled = true
+                    p1Special.enabled = true
+                    p1Block.enabled = true
+                    p2Left.enabled = true
+                    p2Right.enabled = true
+                    p2Punch.enabled = true
+                    p2Kick.enabled = true
+                    p2Special.enabled = true
+                    p2Block.enabled = true
+    
+                    // Start the next scene and pass correct data
+                    this.scene.start('playScene', {
+                        p1Karate: this.p1Karate,
+                        p1Rumble: this.p1Rumble,
+                        p2Karate: this.p2Karate,
+                        p2Rumble: this.p2Rumble,
+                    })
+                }.bind(this) // Ensure 'this' refers to the current scene inside the onComplete callback
             })
         }
 
