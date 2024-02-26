@@ -19,6 +19,7 @@ class Play extends Phaser.Scene {
     create() {
         this.roundCounter = 1
         //create backgorund
+        this.background = this.add.sprite(0, 0, 'fightBachground').setOrigin(0, 0)
 
         //create health bars
 
