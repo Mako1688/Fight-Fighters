@@ -16,7 +16,7 @@ class Select extends Phaser.Scene {
         this.background = this.add.sprite(0, 0, 'worldmap').setOrigin(0)
 
         //create airplane
-        this.airplane = this.add.sprite(618, 225, 'airplane').setAlpha(0).setOrigin(0.5, 0.5).setScale(2)
+        this.airplane = this.add.sprite(618, 225, 'airplane').setAlpha(0).setOrigin(0.5, 0.5).setScale(3)
 
         //place character slect
         this.select = this.add.sprite(game.config.width / 2, game.config.height / 4 * 3, 'characters_select')
