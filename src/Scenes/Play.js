@@ -26,7 +26,9 @@ class Play extends Phaser.Scene {
         //create ref
 
         //create players
-        this.player1 = 
+        this.player1 = new Player1(this, game.config.width / 4, game.config.height / 4*3 + 50, '', 0)
+        this.player1 = new Player2(this, game.config.width / 4 * 3, game.config.height / 4*3 + 50, '', 0)
+
 
         //ready ... fight
         this.roundStart(this.roundCounter)

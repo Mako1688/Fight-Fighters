@@ -10,25 +10,25 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
         this.hurtTimer = 250       // in ms
 
         // initialize state machine managing hero (initial state, possible states, state args[])
-        scene.player1FSM = new StateMachine('idle', {
-            idle: new IdleState(), 
-            move: new MoveState(),
-            crouch:new CrouchState(),
-            crouchBlock: new CrouchBlockState(),
-            block: new BLockState(),
-            punch: new PunchState(),
-            downPunch: new DownPunchState(),
-            kick: new KickState(),
-            downKick: new DownKickState(),
-            special: new SpecialState(),
-            downSpecial: new DownSpecialState(),
-            hurt: new HurtState()
+        scene.player1FSM = new StateMachine1('idle', {
+            idle: new IdleState1(), 
+            move: new MoveState1(),
+            crouch:new CrouchState1(),
+            crouchBlock: new CrouchBlockState1(),
+            block: new BlockState1(),
+            punch: new PunchState1(),
+            downPunch: new DownPunchState1(),
+            kick: new KickState1(),
+            downKick: new DownKickState1(),
+            special: new SpecialState1(),
+            downSpecial: new DownSpecialState1(),
+            hurt: new HurtState1()
         }, [scene, this])   // pass these as arguments to maintain scene/object context in the FSM
     }
 }
 
 // hero-specific state classes
-class IdleState extends State {
+class IdleState1 extends State1 {
     enter(scene, player) {
         //stop [player]
         player.setVelocity(0)
@@ -78,7 +78,7 @@ class IdleState extends State {
     }
 }
 
-class MoveState extends State {
+class MoveState1 extends State1 {
     enter(scene, player) {
         // handle movement
         if(scene.p1Left.isDown){
@@ -146,7 +146,7 @@ class MoveState extends State {
     }
 }
 
-class CrouchState extends State {
+class CrouchState1 extends State1 {
     enter(scene, player) {
         player.setVelocity(0)
 
@@ -193,7 +193,7 @@ class CrouchState extends State {
     }
 }
 
-class CrouchBlockState extends State {
+class CrouchBlockState1 extends State1 {
     enter(scene, player) {
         player.setVelocity(0)
 
@@ -201,86 +201,239 @@ class CrouchBlockState extends State {
     }
 
     execute(scene, player) {
-        
-    }
-}
+        //make player invulnerable to attacks
 
-class SwingState extends State {
-    enter(scene, hero) {
-        hero.setVelocity(0)
-        hero.anims.play(`swing-${hero.direction}`)
-        hero.once('animationcomplete', () => {
-            this.stateMachine.transition('idle')
-        })
-    }
-}
-
-class DashState extends State {
-    enter(scene, hero) {
-        hero.setVelocity(0)
-        hero.anims.play(`swing-${hero.direction}`)
-        hero.setTint(0x00AA00)     // turn green
-        switch(hero.direction) {
-            case 'up':
-                hero.setVelocityY(-hero.heroVelocity * 3)
-                break
-            case 'down':
-                hero.setVelocityY(hero.heroVelocity * 3)
-                break
-            case 'left':
-                hero.setVelocityX(-hero.heroVelocity * 3)
-                break
-            case 'right':
-                hero.setVelocityX(hero.heroVelocity * 3)
-                break
+        //transition to block if crouch is released
+        if(!(scene.p1Down.isDown)) {
+            this.stateMachine.transition('block')
+            return
         }
 
-        // set a short cooldown delay before going back to idle
-        scene.time.delayedCall(hero.dashCooldown, () => {
-            hero.clearTint()
-            this.stateMachine.transition('idle')
-        })
-    }
-}
-
-class HurtState extends State {
-    enter(scene, hero) {
-        hero.setVelocity(0)
-        hero.anims.play(`walk-${hero.direction}`)
-        hero.anims.stop()
-        hero.setTint(0xFF0000)     // turn red
-        // create knockback by sending body in direction opposite facing direction
-        switch(hero.direction) {
-            case 'up':
-                hero.setVelocityY(hero.heroVelocity*2)
-                break
-            case 'down':
-                hero.setVelocityY(-hero.heroVelocity*2)
-                break
-            case 'left':
-                hero.setVelocityX(hero.heroVelocity*2)
-                break
-            case 'right':
-                hero.setVelocityX(-hero.heroVelocity*2)
-                break
+        //transition to punch if punch key pressed
+        if(scene.p1Punch.isDown){
+            this.stateMachine.transition('downPunch')
+            return
         }
 
-        // set recovery timer
-        scene.time.delayedCall(hero.hurtTimer, () => {
-            hero.clearTint()
-            this.stateMachine.transition('idle')
-        })
+        //transition to kick if kick key pressed
+        if(scene.p1Kick.isDown){
+            this.stateMachine.transition('downKick')
+            return
+        }
+
+        //transition to special if special key pressed
+        if(scene.p1Special.isDown){
+            this.stateMachine.transition('downSpecial')
+            return
+        }
+
+        // transition to crouch if release block key
+        if(!(scene.p1Block.isDown)) {
+            this.stateMachine.transition('crouch')
+            return
+        }
+
     }
 }
 
-class CircularState extends State {
-    enter(scene, hero) {
-        //hero.setTint(0x0000FF)
-        hero.setVelocity(0)
-        hero.anims.play('circular-attack').once('animationcomplete', () => {
-            scene.cameras.main.shake(150, 0.005)
+class BlockState1 extends State1 {
+    enter(scene, player) {
+        //freeze velocity
+        player.setVelocity(0)
+
+        //make immune to hits
+
+        //play block animation
+
+    }
+
+    execute(scene, player) {
+        //transition to move if movement keys pressed
+        if(scene.p1Left.isDown || scene.p1Right.isDown){
+            this.stateMachine.transition('move')
+            return
+        }
+
+        //transition to crouch block if crouch is pressed
+        if(scene.p1Down.isDown) {
+            this.stateMachine.transition('crouchBlock')
+            return
+        }
+
+        //transition to punch if punch key pressed
+        if(scene.p1Punch.isDown){
+            this.stateMachine.transition('punch')
+            return
+        }
+
+        //transition to kick if kick key pressed
+        if(scene.p1Kick.isDown){
+            this.stateMachine.transition('kick')
+            return
+        }
+
+        //transition to special if special key pressed
+        if(scene.p1Special.isDown){
+            this.stateMachine.transition('special')
+            return
+        }
+
+        // transition to idle if release block key
+        if(!(scene.p1Block.isDown)) {
             this.stateMachine.transition('idle')
-        })
-        
+            return
+        }
+    }
+
+}
+
+class PunchState1 extends State1 {
+    enter(scene, player) {
+        player.setVelocity(0)
+
+        //play punch animation transition to idle when finished
+
+
+        //enable hitbox for punch
+
+    }
+
+    execute(scene, player) {
+        //transition to special if special key pressed
+        if(scene.p1Special.isDown){
+            this.stateMachine.transition('special')
+            return
+        }
+
+        //transition to down punch if punch pressed again
+        if(scene.p1Punch.isDown) {
+            this.stateMachine.transition('downPunch')
+            return
+        }
+
+        //transition to down kick if kick pressed
+        if(scene.p1Kick.isDown) {
+            this.stateMachine.transition('downKick')
+            return
+        }
+
     }
 }
+
+class DownPunchState1 extends State1 {
+    enter(scene, player) {
+        player.setVelocity(0)
+
+        //play  down punch animation transition to idle when finished
+
+
+        //enable hitbox for down punch
+
+    }
+
+    execute(scene, player) {
+        //transition to down special if special key pressed
+        if(scene.p1Special.isDown){
+            this.stateMachine.transition('downSpecial')
+            return
+        }
+
+    }
+}
+
+class KickState1 extends State1 {
+    enter(scene, player) {
+        player.setVelocity(0)
+
+        //play kick animation transition to idle when finished
+
+
+        //enable hitbox for kick
+    }
+
+    execute(scene, player) {
+        //transition to special if special key pressed
+        if(scene.p1Special.isDown){
+            this.stateMachine.transition('special')
+            return
+        }
+
+        //transition to down punch if punch pressed again
+        if(scene.p1Punch.isDown) {
+            this.stateMachine.transition('downPunch')
+            return
+        }
+
+        //transition to down kick if kick pressed
+        if(scene.p1Kick.isDown) {
+            this.stateMachine.transition('downKick')
+            return
+        }
+
+    }
+}
+
+class DownKickState1 extends State1 {
+    enter(scene, player) {
+        player.setVelocity(0)
+
+        //play down kick animation transition to idle when finished
+
+
+        //enable hitbox for down kick
+
+    }
+
+    execute(scene, player) {
+        //transition to down special if special key pressed
+        if(scene.p1Special.isDown){
+            this.stateMachine.transition('downSpecial')
+            return
+        }
+
+    }
+}
+
+class SpecialState1 extends State1 {
+    enter(scene, player) {
+        player.setVelocity(0)
+
+        //play special animation transition to idle when finished
+
+
+        //enable hitbox for special state
+    }
+
+    execute(scene, player) {
+
+    }
+
+}
+
+class DownSpecialState1 extends State1 {
+    enter(scene, player) {
+        player.setVelocity(0)
+
+        //play down special animation transition to idle when finished
+
+
+        //enable hitbox for down special state
+    }
+
+    execute(scene, player) {
+
+    }
+}
+
+
+
+class HurtState1 extends State1 {
+    enter(scene, hero) {
+        //move slightly away from other player
+
+        //play hurt animation
+
+        //wait until hurt animation is complete before returning to idle
+    }
+}
+
