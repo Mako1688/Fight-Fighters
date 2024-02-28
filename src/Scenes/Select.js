@@ -222,9 +222,6 @@ class Select extends Phaser.Scene {
                 duration: 1000,
                 ease: 'Linear',
                 onComplete: function () {
-                    // Code to execute after the tween is complete
-                    console.log('Movement complete!')
-    
                     // Enable controls again
                     p1Left.enabled = true
                     p1Right.enabled = true

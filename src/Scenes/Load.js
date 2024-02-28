@@ -27,6 +27,20 @@ class Load extends Phaser.Scene {
         this.load.image('fightBachground', './assets/Sprites/fightFightersBackground.png')
 
         //load spritesheets
+        this.load.spritesheet('explosion', './assets/SpriteSheets/Fist Explosion.png', {
+            frameWidth: 184,
+            frameHeight: 104,
+            startFrame:  0,
+            endFrames: 32
+        })
+
+        this.load.spritesheet('title', './assets/SpriteSheets/Title_Sheet.png', {
+            frameWidth: 800,
+            frameHeight: 513,
+            startFrame:  0,
+            endFrames: 24
+        })
+
         this.load.spritesheet('p1_cursor_sheet', './assets/SpriteSheets/p1 cursor sheet.png', {
             frameWidth: 70,
             frameHeight: 100,
@@ -39,11 +53,105 @@ class Load extends Phaser.Scene {
             startFrame:  0,
             endFrames: 1
         })
+
+        //load Rumble Spritesheets
+        this.load.spritesheet('rumble_idle', './assets/SpriteSheets/Rumble_Idle.png', {
+            frameWidth: 104,
+            frameHeight: 120,
+            startFrame:  0,
+            endFrames: 13
+        })
+
+        this.load.spritesheet('rumble_punch', './assets/SpriteSheets/Rumble_Punch.png', {
+            frameWidth: 160,
+            frameHeight: 152,
+            startFrame:  0,
+            endFrames: 6
+        })
+
+        this.load.spritesheet('rumble_down_punch', './assets/SpriteSheets/Rumble_DownPunch.png', {
+            frameWidth: 152,
+            frameHeight: 144,
+            startFrame:  0,
+            endFrames: 6
+        })
+
+        this.load.spritesheet('rumble_walk', './assets/SpriteSheets/Rumble_Walk.png', {
+            frameWidth: 152,
+            frameHeight: 144,
+            startFrame:  0,
+            endFrames: 7
+        })
+
+        this.load.spritesheet('rumble_down_kick', './assets/SpriteSheets/Rumble_Down_Kick.png', {
+            frameWidth: 172,
+            frameHeight: 166,
+            startFrame:  0,
+            endFrames: 18
+        })
+
+        this.load.spritesheet('rumble_kick', './assets/SpriteSheets/Rumble_Kick.png', {
+            frameWidth: 160,
+            frameHeight: 192,
+            startFrame:  0,
+            endFrames: 8
+        })
+
+        //load Dr Karate Sprite sheets
+        this.load.spritesheet('karate_idle', './assets/SpriteSheets/Karate_Idle.png', {
+            frameWidth: 136,
+            frameHeight: 144,
+            startFrame:  0,
+            endFrames: 5
+        })
+
+        this.load.spritesheet('karate_punch', './assets/SpriteSheets/Karate_Punch.png', {
+            frameWidth: 184,
+            frameHeight: 152,
+            startFrame:  0,
+            endFrames: 6
+        })
+
+        this.load.spritesheet('karate_kick', './assets/SpriteSheets/Karate_Kick.png', {
+            frameWidth: 200,
+            frameHeight: 144,
+            startFrame:  0,
+            endFrames: 8
+        })
+        
+        this.load.spritesheet('karate_walk', './assets/SpriteSheets/Karate_Walk.png', {
+            frameWidth: 137,
+            frameHeight: 152,
+            startFrame:  0,
+            endFrames: 5
+        })
         
     }
 
     create() {
         //create animations
+        this.anims.create({
+            key: 'explode',
+            
+            frames: this.anims.generateFrameNumbers('explosion', { 
+                start: 0, 
+                end: 32, 
+                first: 0
+            }),
+            frameRate: 12
+        })
+
+        this.anims.create({
+            key: 'jiggle',
+            
+            frames: this.anims.generateFrameNumbers('title', { 
+                start: 0, 
+                end: 24, 
+                first: 0
+            }),
+            frameRate: 12
+        })
+
         this.anims.create({
             key: 'p1_cursor_flash',
             
@@ -65,7 +173,111 @@ class Load extends Phaser.Scene {
             }),
             frameRate: 2
         })
+
+        //create rumble animations
+        this.anims.create({
+            key: 'r_idle',
+            frames: this.anims.generateFrameNumbers('rumble_idle', { 
+                start: 0, 
+                end: 13, 
+                first: 0
+            }),
+            frameRate: 12,
+            repeat: -1
+        })
+
+        this.anims.create({
+            key: 'r_punch',
+            frames: this.anims.generateFrameNumbers('rumble_punch', { 
+                start: 0, 
+                end: 6, 
+                first: 0
+            }),
+            frameRate: 12
+        })
+
+        this.anims.create({
+            key: 'r_down_punch',
+            frames: this.anims.generateFrameNumbers('rumble_down_punch', { 
+                start: 0, 
+                end: 6, 
+                first: 0
+            }),
+            frameRate: 12
+        })
+
+        this.anims.create({
+            key: 'r_walk',
+            frames: this.anims.generateFrameNumbers('rumble_walk', { 
+                start: 0, 
+                end: 7, 
+                first: 0
+            }),
+            frameRate: 12,
+            repeat: -1
+        })
+
+        this.anims.create({
+            key: 'r_down_kick',
+            frames: this.anims.generateFrameNumbers('rumble_down_kick', { 
+                start: 0, 
+                end: 18, 
+                first: 0
+            }),
+            frameRate: 12,
+        })
+
+        this.anims.create({
+            key: 'r_kick',
+            frames: this.anims.generateFrameNumbers('rumble_kick', { 
+                start: 0, 
+                end: 6, 
+                first: 0
+            }),
+            frameRate: 12,
+        })
         
+
+        //create Dr Karate animations
+        this.anims.create({
+            key: 'k_idle',
+            frames: this.anims.generateFrameNumbers('karate_idle', { 
+                start: 0, 
+                end: 5, 
+                first: 0
+            }),
+            frameRate: 12
+        })
+
+        this.anims.create({
+            key: 'k_punch',
+            frames: this.anims.generateFrameNumbers('karate_punch', { 
+                start: 0, 
+                end: 6, 
+                first: 0
+            }),
+            frameRate: 12
+        })
+
+        this.anims.create({
+            key: 'k_kick',
+            frames: this.anims.generateFrameNumbers('karate_kick', { 
+                start: 0, 
+                end: 8, 
+                first: 0
+            }),
+            frameRate: 12
+        })
+
+        this.anims.create({
+            key: 'k_walk',
+            frames: this.anims.generateFrameNumbers('karate_walk', { 
+                start: 0, 
+                end: 5, 
+                first: 0
+            }),
+            frameRate: 12
+        })
     }
 
     update() {
