@@ -520,13 +520,25 @@ class SpecialState1 extends State1 {
         player.setVelocity(0)
         player.anims.stop()
 
+        player.anims.play('r_special')
+        scene.fireball = scene.add.sprite(player.x + 104, player.height + 275, 'fireball', 0)
         
+        player.on('animationcomplete', () => {    //callback after anim completes
+            scene.fireball.destroy()
+            this.stateMachine.transition('idle')
+            return
+        })
 
 
         //enable hitbox for special state
     }
 
     execute(scene, player) {
+
+        scene.fireball.x += 6
+        scene.fireball.anims.play('fireball_anim', true)
+
+        
 
         //play special animation transition to idle when finished
 

@@ -26,6 +26,9 @@ class Load extends Phaser.Scene {
         this.load.image('airplane', './assets/Sprites/Airplane.png')
         this.load.image('fightBachground', './assets/Sprites/fightFightersBackground.png')
 
+        //load audio
+        this.load.audio('intro', './assets/Sounds/intro.mp3')
+
         //load spritesheets
         this.load.spritesheet('explosion', './assets/SpriteSheets/Fist Explosion.png', {
             frameWidth: 184,
@@ -95,6 +98,20 @@ class Load extends Phaser.Scene {
             frameHeight: 192,
             startFrame:  0,
             endFrames: 8
+        })
+
+        this.load.spritesheet('rumble_special', './assets/SpriteSheets/Rumble_Special.png', {
+            frameWidth: 130,
+            frameHeight: 120,
+            startFrame:  0,
+            endFrames: 9
+        })
+
+        this.load.spritesheet('fireball', './assets/SpriteSheets/Fireball.png', {
+            frameWidth: 140,
+            frameHeight: 100,
+            startFrame:  0,
+            endFrames: 4
         })
 
         //load Dr Karate Sprite sheets
@@ -231,7 +248,27 @@ class Load extends Phaser.Scene {
             key: 'r_kick',
             frames: this.anims.generateFrameNumbers('rumble_kick', { 
                 start: 0, 
-                end: 6, 
+                end: 4, 
+                first: 0
+            }),
+            frameRate: 12,
+        })
+
+        this.anims.create({
+            key: 'r_special',
+            frames: this.anims.generateFrameNumbers('rumble_special', { 
+                start: 0, 
+                end: 9, 
+                first: 0
+            }),
+            frameRate: 12,
+        })
+
+        this.anims.create({
+            key: 'fireball_anim',
+            frames: this.anims.generateFrameNumbers('fireball', { 
+                start: 0, 
+                end: 4, 
                 first: 0
             }),
             frameRate: 12,

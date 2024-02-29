@@ -12,6 +12,8 @@ class Title extends Phaser.Scene {
     }
 
     create() {
+        //play audio
+        this.sound.play('intro')
         //add background image
         
         this.title = this.add.sprite(game.config.width/2, game.config.height/3, 'title', 0)
