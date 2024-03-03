@@ -215,14 +215,14 @@ class MoveState1 extends State1 {
             //play walk animation backwards
             player.anims.playReverse('r_walk', true)
             //set velocity
-            player.setVelocityX(-150)
+            player.setVelocityX(-200)
 
             
         }else if(right.isDown) {
             //play walk animation forwards
             player.anims.play('r_walk', true)
             //set velocity
-            player.setVelocityX(150)
+            player.setVelocityX(200)
 
         }
 
@@ -539,7 +539,7 @@ class SpecialState1 extends State1 {
         player.anims.stop()
 
         player.anims.play('r_special')
-        scene.fireball = scene.add.sprite(player.x + 104, player.height + 275, 'fireball', 0)
+        scene.fireball = scene.add.sprite(player.x, player.height + 280, 'fireball', 0)
         
         player.once('animationcomplete', () => {    //callback after anim completes
             scene.fireball.destroy()

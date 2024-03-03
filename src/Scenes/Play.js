@@ -17,6 +17,8 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        this.gameOver = false
+        this.roundStarted = false
         // setup keyboard input
         // const left = scene.keys.AKey
         // const right = scene.keys.DKey
@@ -39,17 +41,27 @@ class Play extends Phaser.Scene {
         //player 2 keys
         // this.keys.Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
         // this.keys.FKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
-
-
-
-
+        
 
 
         this.roundCounter = 1
         //create backgorund
         this.background = this.add.sprite(0, 0, 'fightBachground').setOrigin(0, 0)
 
-        //create health bars
+        let menuConfig = {
+            fontFamily: 'PressStart2P',
+            fontSize: '24px',
+            backgroundColor: '#000000',
+            color: '#FFFFFF',
+            align: 'center',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 0,
+        }
+
+        this.clockText = this.add.text(game.config.width / 2, 30, '99', menuConfig)
 
         //create ref
 
@@ -72,9 +84,27 @@ class Play extends Phaser.Scene {
         this.player1FSM.step()
         //this.player2FSM.step()
 
+        if (!this.gameOver && this.roundStarted == true) {  // Add a game over
+            //display clock
+            this.clockText.text = Math.trunc((99000 - (this.clock.getElapsed())) / 1000)
+        }
+
     }
 
     roundStart(roundNum) {
+        let menuConfig = {
+            fontFamily: 'PressStart2P',
+            fontSize: '24px',
+            backgroundColor: '#000000',
+            color: '#FFFFFF',
+            align: 'center',
+            padding: {
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 0,
+        }
+        
         if(roundNum == 1){
             //display round 1 text
             this.round = this.add.sprite(game.config.width / 2, game.config.height / 2, 'Round01')
@@ -96,6 +126,14 @@ class Play extends Phaser.Scene {
             this.fightText = this.add.sprite(game.config.width / 2, game.config.height / 2, 'fight')
             this.time.delayedCall(1500 , ()=> {
                 this.fightText.destroy()
+                this.roundStarted = true
+                //99-second play clock
+                this.clock = this.time.delayedCall(99000, () => {
+                    this.gameOver = true
+                }, null, this)
+                this.clockText = this.add.text(game.config.width / 2, 30, (this.clock.getElapsed() / 100), menuConfig)
+                
+    
             })
 
             //play ref animation
