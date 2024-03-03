@@ -56,7 +56,7 @@ class Play extends Phaser.Scene {
         //create players
         //bracket notation:
         //this[this.p1Rumble]
-        this.player1 = new Player1(this, game.config.width / 4, game.config.height / 4*3 + 50, 'rumble_idle', 0).setOrigin(0, 1).setScale(2)
+        this.player1 = new Player1(this, game.config.width / 4, game.config.height / 3 * 2, 'rumble_idle', 0).setOrigin(0.5, 0.5).setScale(2)
         //this.player2 = new Player2(this, game.config.width / 4 * 3, game.config.height / 4*3 + 50, 'karate_idle', 0).setOrigin(1, 1).setScale(2)
 
         

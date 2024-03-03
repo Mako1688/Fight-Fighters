@@ -4,12 +4,30 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this)           // add Hero to existing scene
         scene.physics.add.existing(this)   // add physics body to scene
 
-        // set custom Hero properties 
+        // set custom player properties 
         this.dashCooldown = 300    // in ms
         this.hurtTimer = 250       // in ms
 
+        // Add health-related properties
+        this.maxHealth = 100
+        this.currentHealth = this.maxHealth
+        // Health bar scale factor
+        this.healthBarScale = 4
+
         this.body.setCollideWorldBounds(true)
-        this.body.setSize(104, 120)
+        // Set the initial size of the physics body
+        this.body.setSize(100, 120)
+
+        // Define custom hitbox properties for different animations
+        this.customHitboxes = {
+            punch: { width: 50, height: 20, offsetX: 40, offsetY: 0},
+            downpunch: { width: 50, height: 120, offsetX: 40, offsetY: 0 },
+            kick: { width: 80, height: 120, offsetX: 40, offsetY: 0 },
+            downkick: { width: 80, height: 120, offsetX: 40, offsetY: 0 },
+            special: { width: 80, height: 120, offsetX: 40, offsetY: 0 },
+            downspecial: { width: 80, height: 120, offsetX: 40, offsetY: 0 },
+            // Add more animations as needed
+        };
 
         // initialize state machine managing player (initial state, possible states, state args[])
         scene.player1FSM = new StateMachine1('idle', {
@@ -25,8 +43,58 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
             downSpecial: new DownSpecialState1(),
             hurt: new HurtState1()
         }, [scene, this])   // pass these as arguments to maintain scene/object context in the FSM
+
+        // Create a health bar
+        this.createHealthBar(scene)
+    }
+
+    createHealthBar(scene) {
+        const x = 0 // Adjust the position based on your game's layout
+        const y = 0
+
+        // Create a graphics object for the health bar background
+        const healthBarBackground = scene.add.graphics()
+        healthBarBackground.fillStyle(0x000000, 0.5)
+        healthBarBackground.fillRect(x, y, 100 * this.healthBarScale, 10 * this.healthBarScale)
+
+        // Create a graphics object for the health bar
+        const healthBar = scene.add.graphics()
+        healthBar.fillStyle(0x00ff00)
+        healthBar.fillRect(x, y, 100 * this.healthBarScale, 10 * this.healthBarScale)
+
+        // Add the health bar objects as properties of the player
+        this.healthBarBackground = healthBarBackground
+        this.healthBar = healthBar
+    }
+    
+    updateHealthBar() {
+        const healthPercentage = Phaser.Math.Clamp(this.currentHealth / this.maxHealth, 0, 1)
+        const healthBarWidth = 100 * this.healthBarScale * healthPercentage
+
+        // Update the health bar width
+        this.healthBar.clear()
+        this.healthBar.fillStyle(0x00ff00)
+        this.healthBar.fillRect(this.healthBarBackground.x, this.healthBarBackground.y, healthBarWidth, 10 * this.healthBarScale)
+
+    }
+    
+    // Function to decrease player health
+    decreaseHealth(amount) {
+        this.currentHealth -= amount
+
+        // Check if the player is defeated (optional)
+        if (this.currentHealth <= 0) {
+            this.currentHealth = 0
+            // Perform actions for player defeat if needed
+        }
+
+        // Update the health bar
+        this.updateHealthBar()
+
     }
 }
+
+
 
 // hero-specific state classes
 class IdleState1 extends State1 {
@@ -294,7 +362,7 @@ class PunchState1 extends State1 {
         player.anims.stop()
 
         player.anims.play('r_punch')
-        player.on('animationcomplete', () => {    //callback after anim completes
+        player.once('animationcomplete', () => {    //callback after anim completes
             this.stateMachine.transition('idle')
             return
         })
@@ -346,7 +414,7 @@ class DownPunchState1 extends State1 {
         player.anims.stop()
 
         player.anims.play('r_down_punch')
-        player.on('animationcomplete', () => {    //callback after anim completes
+        player.once('animationcomplete', () => {    //callback after anim completes
             this.stateMachine.transition('idle')
             return
         })
@@ -386,7 +454,7 @@ class KickState1 extends State1 {
         player.anims.stop()
 
         player.anims.play('r_kick')
-        player.on('animationcomplete', () => {    //callback after anim completes
+        player.once('animationcomplete', () => {    //callback after anim completes
             this.stateMachine.transition('idle')
             return
         })
@@ -434,7 +502,7 @@ class DownKickState1 extends State1 {
         player.anims.stop()
 
         player.anims.play('r_down_kick')
-        player.on('animationcomplete', () => {    //callback after anim completes
+        player.once('animationcomplete', () => {    //callback after anim completes
             this.stateMachine.transition('idle')
             return
         })
@@ -473,7 +541,7 @@ class SpecialState1 extends State1 {
         player.anims.play('r_special')
         scene.fireball = scene.add.sprite(player.x + 104, player.height + 275, 'fireball', 0)
         
-        player.on('animationcomplete', () => {    //callback after anim completes
+        player.once('animationcomplete', () => {    //callback after anim completes
             scene.fireball.destroy()
             this.stateMachine.transition('idle')
             return
@@ -504,7 +572,7 @@ class DownSpecialState1 extends State1 {
 
         player.anims.play('r_down_special')
 
-        player.on('animationcomplete', () => {    //callback after anim completes
+        player.once('animationcomplete', () => {    //callback after anim completes
             this.stateMachine.transition('idle')
             return
         })
@@ -530,7 +598,7 @@ class HurtState1 extends State1 {
         //play hurt animation
         player.anims.play('r_hurt')
 
-        player.on('animationcomplete', () => {    //callback after anim completes
+        player.once('animationcomplete', () => {    //callback after anim completes
             this.stateMachine.transition('idle')
             return
         })
