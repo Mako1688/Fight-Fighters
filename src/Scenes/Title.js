@@ -43,10 +43,12 @@ class Title extends Phaser.Scene {
         this.title.anims.play('jiggle', true)
         //press any key to play
         if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
+            this.input.keyboard.enabled = false
             this.explosion = this.add.sprite(0, 0, 'explosion', 32).setScale(5, 6.2).setOrigin(0, 0)
             //play shitty explosion animation
             this.explosion.anims.play('explode', true)
             this.explosion.on('animationcomplete', () => {    //callback after anim completes
+                this.input.keyboard.enabled = true
                 this.scene.start('selectScene')
             })
             

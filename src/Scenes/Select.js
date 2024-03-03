@@ -181,6 +181,8 @@ class Select extends Phaser.Scene {
             p1Special.enabled = false
             p1Block.enabled = false
             this.p1select = true
+            // Pause the crouch animation on the last frame
+            this.p1cursor.anims.pause(this.p1cursor.anims.currentAnim.frames[1])
         }
 
         if(p2Punch.isDown || p2Kick.isDown || p2Special.isDown || p2Block.isDown) {
@@ -192,9 +194,9 @@ class Select extends Phaser.Scene {
             p2Kick.enabled = false
             p2Special.enabled = false
             p2Block.enabled = false
-
-
             this.p2select = true
+            // Pause the crouch animation on the last frame
+            this.p2cursor.anims.pause(this.p2cursor.anims.currentAnim.frames[1])
         }
 
         if (this.p1select && this.p2select) {
