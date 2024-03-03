@@ -11,12 +11,11 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
         this.body.setCollideWorldBounds(true)
         this.body.setSize(104, 120)
 
-        // initialize state machine managing hero (initial state, possible states, state args[])
+        // initialize state machine managing player (initial state, possible states, state args[])
         scene.player1FSM = new StateMachine1('idle', {
             idle: new IdleState1(), 
             move: new MoveState1(),
             crouch:new CrouchState1(),
-            crouchBlock: new CrouchBlockState1(),
             block: new BlockState1(),
             punch: new PunchState1(),
             downPunch: new DownPunchState1(),
@@ -169,6 +168,8 @@ class CrouchState1 extends State1 {
         player.anims.stop()
 
         //play crouch animation
+        player.anims.play('r_crouch')
+
 
     }
 
@@ -181,6 +182,10 @@ class CrouchState1 extends State1 {
         const kick = scene.keys.FKey
         const special = scene.keys.TKey
         const block = scene.keys.GKey
+
+        // Pause the crouch animation on the last frame
+        player.anims.pause(player.anims.currentAnim.frames[1])
+
         //transition to move if movement keys pressed
         if(Phaser.Input.Keyboard.JustDown(left) || Phaser.Input.Keyboard.JustDown(right)){
             this.stateMachine.transition('move')
@@ -189,58 +194,6 @@ class CrouchState1 extends State1 {
 
         //transition to block if block key is pressed
         if(Phaser.Input.Keyboard.JustDown(block)) {
-            this.stateMachine.transition('crouchBlock')
-            return
-        }
-
-        //transition to punch if punch key pressed
-        if(Phaser.Input.Keyboard.JustDown(punch)){
-            this.stateMachine.transition('downPunch')
-            return
-        }
-
-        //transition to kick if kick key pressed
-        if(Phaser.Input.Keyboard.JustDown(kick)){
-            this.stateMachine.transition('downKick')
-            return
-        }
-
-        //transition to special if special key pressed
-        if(Phaser.Input.Keyboard.JustDown(special)){
-            this.stateMachine.transition('downSpecial')
-            return
-        }
-
-        // transition to idle if release crouch key
-        if(!(Phaser.Input.Keyboard.JustDown(down))) {
-            this.stateMachine.transition('idle')
-            return
-        }
-    }
-}
-
-class CrouchBlockState1 extends State1 {
-    enter(scene, player) {
-        console.log("p1 crouchblock")
-        player.setVelocity(0)
-        player.anims.stop()
-
-        //play crouch block animation
-    }
-
-    execute(scene, player) {
-        // use destructuring to make a local copy of the keyboard object
-        const left = scene.keys.AKey
-        const right = scene.keys.DKey
-        const down = scene.keys.SKey
-        const punch = scene.keys.RKey
-        const kick = scene.keys.FKey
-        const special = scene.keys.TKey
-        const block = scene.keys.GKey
-        //make player invulnerable to attacks
-
-        //transition to block if crouch is released
-        if(!(Phaser.Input.Keyboard.JustDown(down))) {
             this.stateMachine.transition('block')
             return
         }
@@ -263,12 +216,11 @@ class CrouchBlockState1 extends State1 {
             return
         }
 
-        // transition to crouch if release block key
-        if(!(Phaser.Input.Keyboard.JustDown(block))) {
-            this.stateMachine.transition('crouch')
+        // transition to idle if release crouch key
+        if(Phaser.Input.Keyboard.JustUp(down)) {
+            this.stateMachine.transition('idle')
             return
         }
-
     }
 }
 
@@ -278,6 +230,9 @@ class BlockState1 extends State1 {
         //freeze velocity
         player.setVelocity(0)
         player.anims.stop()
+
+        //play crouch animation
+        player.anims.play('r_block')
 
         //make immune to hits
 
@@ -295,18 +250,19 @@ class BlockState1 extends State1 {
         const special = scene.keys.TKey
         const block = scene.keys.GKey
 
-        //play block animation
+        // Pause the crouch animation on the last frame
+        player.anims.pause(player.anims.currentAnim.frames[2])
+
+        // transition to idle if release crouch key
+        if(Phaser.Input.Keyboard.JustUp(block)) {
+            this.stateMachine.transition('idle')
+            return
+        }
 
 
         //transition to move if movement keys pressed
         if(Phaser.Input.Keyboard.JustDown(left) || Phaser.Input.Keyboard.JustDown(right)){
             this.stateMachine.transition('move')
-            return
-        }
-
-        //transition to crouch block if crouch is pressed
-        if(Phaser.Input.Keyboard.JustDown(down)) {
-            this.stateMachine.transition('crouchBlock')
             return
         }
 
@@ -325,12 +281,6 @@ class BlockState1 extends State1 {
         //transition to special if special key pressed
         if(Phaser.Input.Keyboard.JustDown(special)){
             this.stateMachine.transition('special')
-            return
-        }
-
-        // transition to idle if release block key
-        if(!(Phaser.Input.Keyboard.JustDown(block))) {
-            this.stateMachine.transition('idle')
             return
         }
     }
@@ -552,8 +502,12 @@ class DownSpecialState1 extends State1 {
         player.setVelocity(0)
         player.anims.stop()
 
-        
+        player.anims.play('r_down_special')
 
+        player.on('animationcomplete', () => {    //callback after anim completes
+            this.stateMachine.transition('idle')
+            return
+        })
 
         //enable hitbox for down special state
     }
@@ -568,12 +522,18 @@ class DownSpecialState1 extends State1 {
 
 
 class HurtState1 extends State1 {
-    enter(scene, hero) {
+    enter(scene, player) {
         console.log("p1 hurt")
         player.anims.stop()
         //move slightly away from other player
 
         //play hurt animation
+        player.anims.play('r_hurt')
+
+        player.on('animationcomplete', () => {    //callback after anim completes
+            this.stateMachine.transition('idle')
+            return
+        })
 
         //wait until hurt animation is complete before returning to idle
     }
