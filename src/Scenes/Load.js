@@ -28,6 +28,10 @@ class Load extends Phaser.Scene {
 
         //load audio
         this.load.audio('intro', './assets/Sounds/intro.mp3')
+        this.load.audio('character_select_song', './assets/Sounds/Character Select.mp3')
+        this.load.audio('select', './assets/Sounds/select.wav')
+        this.load.audio('hit', './assets/Sounds/Hit.wav')
+        this.load.audio('switch', './assets/Sounds/Switch.wav')
 
         //load spritesheets
         this.load.spritesheet('explosion', './assets/SpriteSheets/Fist Explosion.png', {

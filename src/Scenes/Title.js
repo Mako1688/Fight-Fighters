@@ -13,9 +13,9 @@ class Title extends Phaser.Scene {
 
     create() {
         //play audio
-        this.sound.play('intro')
+        this.intro = this.sound.add('intro')
+        this.intro.play()
         //add background image
-        
         this.title = this.add.sprite(game.config.width/2, game.config.height/3, 'title', 0)
         
 
@@ -43,11 +43,13 @@ class Title extends Phaser.Scene {
         this.title.anims.play('jiggle', true)
         //press any key to play
         if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
+            this.sound.play('select')
             this.input.keyboard.enabled = false
             this.explosion = this.add.sprite(0, 0, 'explosion', 32).setScale(5, 6.2).setOrigin(0, 0)
             //play shitty explosion animation
             this.explosion.anims.play('explode', true)
             this.explosion.on('animationcomplete', () => {    //callback after anim completes
+                this.intro.stop()
                 this.input.keyboard.enabled = true
                 this.scene.start('selectScene')
             })

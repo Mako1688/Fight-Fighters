@@ -12,7 +12,7 @@ class Player2 extends Phaser.Physics.Arcade.Sprite {
         // Define custom hitbox properties for different animations
         this.customHitboxes = {
             punch: { width: 200, height: 120, offsetX: -45, offsetY: -120},
-            downpunch: { width: 70, height: 120, offsetX: -120, offsetY: -120 },
+            downpunch: { width: 180, height: 120, offsetX: -40, offsetY: -120 },
             kick: { width: this.body.width * 2, height: this.body.height * 2, offsetX: -50, offsetY: -100 },
             downkick: { width: 200, height: 120, offsetX: -60, offsetY: -120 },
             downspecial: { width: this.body.width * 2, height: this.body.height * 2, offsetX: -50, offsetY: -160 }

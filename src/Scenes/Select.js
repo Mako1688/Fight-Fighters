@@ -12,6 +12,10 @@ class Select extends Phaser.Scene {
     }
 
     create() {
+        this.sound.play('character_select_song')
+        this.Sound1Played = false
+        this.Sound2Played = false
+        
         //place background
         this.background = this.add.sprite(0, 0, 'worldmap').setOrigin(0)
 
@@ -63,6 +67,7 @@ class Select extends Phaser.Scene {
     }
 
     update() {
+        
         //play animations
         this.p1cursor.anims.play('p1_cursor_flash', true)
         this.p2cursor.anims.play('p2_cursor_flash', true)
@@ -92,6 +97,7 @@ class Select extends Phaser.Scene {
         
         // Handle player 1 left key on rumble
         if (p1Left.isDown && this.p1LeftReleased && this.p1Rumble == true) {
+            this.sound.play('switch')
             this.p1LeftReleased = false
             this.p1Karate = true
             this.p1Rumble = false
@@ -102,6 +108,7 @@ class Select extends Phaser.Scene {
 
         // Handle player 1 right key on rumble
         if (p1Right.isDown && this.p1RightReleased && this.p1Rumble == true) {
+            this.sound.play('switch')
             this.p1RightReleased = false
             this.p1Karate = true
             this.p1Rumble = false
@@ -112,6 +119,7 @@ class Select extends Phaser.Scene {
 
         // Handle player 1 left key on karate
         if (p1Left.isDown && this.p1LeftReleased && this.p1Karate == true) {
+            this.sound.play('switch')
             this.p1LeftReleased = false
             this.p1Rumble = true
             this.p1Karate = false
@@ -122,6 +130,7 @@ class Select extends Phaser.Scene {
 
         // Handle player 1 right key on karate
         if (p1Right.isDown && this.p1RightReleased && this.p1Karate == true) {
+            this.sound.play('switch')
             this.p1RightReleased = false
             this.p1Karate = false
             this.p1Rumble = true
@@ -132,6 +141,7 @@ class Select extends Phaser.Scene {
 
         // Handle player 2 left key on rumble
         if (p2Left.isDown && this.p2LeftReleased && this.p2Rumble == true) {
+            this.sound.play('switch')
             this.p2LeftReleased = false
             this.p2Karate = true
             this.p2Rumble = false
@@ -142,6 +152,7 @@ class Select extends Phaser.Scene {
 
         // Handle player 2 right key on rumble
         if (p2Right.isDown && this.p2RightReleased && this.p2Rumble == true) {
+            this.sound.play('switch')
             this.p2RightReleased = false
             this.p2Karate = true
             this.p2Rumble = false
@@ -152,6 +163,7 @@ class Select extends Phaser.Scene {
 
         // Handle player 2 left key on karate
         if (p2Left.isDown && this.p2LeftReleased && this.p2Karate == true) {
+            this.sound.play('switch')
             this.p2LeftReleased = false
             this.p2Rumble = true
             this.p2Karate = false
@@ -162,6 +174,7 @@ class Select extends Phaser.Scene {
 
         // Handle player 2 right key on karate
         if (p2Right.isDown && this.p2RightReleased && this.p2Karate == true) {
+            this.sound.play('switch')
             this.p2RightReleased = false
             this.p2Rumble = true
             this.p2Karate = false
@@ -172,7 +185,12 @@ class Select extends Phaser.Scene {
 
 
         if(p1Punch.isDown || p1Kick.isDown || p1Special.isDown || p1Block.isDown) {
-            //play sound
+            if(this.Sound1Played == false) {
+                //play sound
+                this.sound.play('select')
+                this.Sound1Played = true
+            }
+            
             //disable movemonet
             p1Left.enabled = false
             p1Right.enabled = false
@@ -186,7 +204,11 @@ class Select extends Phaser.Scene {
         }
 
         if(p2Punch.isDown || p2Kick.isDown || p2Special.isDown || p2Block.isDown) {
-            //play sound
+            if(this.Sound2Played == false) {
+                //play sound
+                this.sound.play('select')
+                this.Sound2Played = true
+            }
             //disable movemonet
             p2Left.enabled = false
             p2Right.enabled = false

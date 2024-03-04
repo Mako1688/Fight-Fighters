@@ -148,6 +148,7 @@ class Play extends Phaser.Scene {
         if (!hitbox.hasHit) {
             // Perform your collision logic here
             console.log("Valid Collision detected!")
+            this.sound.play('hit')
             if(target == this.player1){
                 this.player1FSM.transition('hurt')
             }
@@ -157,7 +158,7 @@ class Play extends Phaser.Scene {
             }
 
             // Example: Decrease target player's health
-            target.decreaseHealth(3) // Adjust the amount as needed
+            target.decreaseHealth(4) // Adjust the amount as needed
 
             // Set the flag to indicate that the hitbox has hit
             hitbox.hasHit = true
@@ -208,7 +209,14 @@ class Play extends Phaser.Scene {
                 this.roundStarted = true
                 //99-second play clock
                 this.clock = this.time.delayedCall(99000, () => {
+                    //health win logic
+                    if(this.player1.currentHealth > this.player2.currentHealth){
+                        this.p1Wins += 1
+                    } else if(this.player2.currentHealth > this.player1.currentHealth) {
+                        this.p2Wins += 1
+                    }
                     this.gameOver = true
+                    
                 }, null, this)
                 this.clockText = this.add.text(game.config.width / 2, 30, (this.clock.getElapsed() / 100), menuConfig).setOrigin(0.5)
                 
