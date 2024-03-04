@@ -7,12 +7,12 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
         this.body.setCollideWorldBounds(true)
         // Set the initial size of the physics body
         this.body.setSize(60, 120)
-        this.body.setImmovable(true)
+        this.body.immovable = true
 
         // Define custom hitbox properties for different animations
         this.customHitboxes = {
             punch: { width: 200, height: 120, offsetX: 45, offsetY: -120},
-            downpunch: { width: 70, height: 120, offsetX: 120, offsetY: -120 },
+            downpunch: { width: 180, height: 120, offsetX: 40, offsetY: -120 },
             kick: { width: this.body.width * 2, height: this.body.height * 2, offsetX: 50, offsetY: -100 },
             downkick: { width: 200, height: 120, offsetX: 60, offsetY: -120 },
             downspecial: { width: this.body.width * 2, height: this.body.height * 2, offsetX: 50, offsetY: -160 }
@@ -35,37 +35,37 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
         }, [scene, this])   // pass these as arguments to maintain scene/object context in the FSM
 
         // Add health-related properties
-        this.maxHealth = 100;
-        this.currentHealth = this.maxHealth;
-        this.healthBarScale = 4; // Scale factor
+        this.maxHealth = 100
+        this.currentHealth = this.maxHealth
+        this.healthBarScale = 4 // Scale factor
 
         // Create a graphics object for the health bar background
-        this.healthBarBackground = scene.add.graphics();
-        this.healthBarBackground.fillStyle(0x000000, 0.5);
-        this.healthBarBackground.fillRect(0, 0, 100 * this.healthBarScale, 10 * this.healthBarScale);
+        this.healthBarBackground = scene.add.graphics()
+        this.healthBarBackground.fillStyle(0x000000, 0.5)
+        this.healthBarBackground.fillRect(0, 0, 100 * this.healthBarScale, 10 * this.healthBarScale)
 
         // Create a graphics object for the health bar
-        this.healthBar = scene.add.graphics();
-        this.healthBar.fillStyle(0x00ff00);
-        this.healthBar.fillRect(0, 0, 100 * this.healthBarScale, 10 * this.healthBarScale);
+        this.healthBar = scene.add.graphics()
+        this.healthBar.fillStyle(0x00ff00)
+        this.healthBar.fillRect(0, 0, 100 * this.healthBarScale, 10 * this.healthBarScale)
 
     }
 
     decreaseHealth(amount) {
         // Calculate the new health bar width
-        this.currentHealth -= amount;
+        this.currentHealth -= amount
         if (this.currentHealth <= 0) {
-            this.currentHealth = 0;
+            this.currentHealth = 0
             // Perform actions for player defeat if needed
         }
 
-        const healthPercentage = Phaser.Math.Clamp(this.currentHealth / this.maxHealth, 0, 1);
-        const healthBarWidth = 100 * this.healthBarScale * healthPercentage;
+        const healthPercentage = Phaser.Math.Clamp(this.currentHealth / this.maxHealth, 0, 1)
+        const healthBarWidth = 100 * this.healthBarScale * healthPercentage
 
         // Clear and update the health bar width
-        this.healthBar.clear();
-        this.healthBar.fillStyle(0x00ff00);
-        this.healthBar.fillRect(100 * this.healthBarScale - healthBarWidth, 0, healthBarWidth, 10 * this.healthBarScale);
+        this.healthBar.clear()
+        this.healthBar.fillStyle(0x00ff00)
+        this.healthBar.fillRect(100 * this.healthBarScale - healthBarWidth, 0, healthBarWidth, 10 * this.healthBarScale)
     }
 
     createHitbox(hitboxConfig, scene) {
@@ -590,7 +590,7 @@ class SpecialState1 extends State1 {
 
     execute(scene, player) {
 
-        scene.fireball.x += 6
+        scene.fireball.x += 5
         scene.fireball.anims.play('fireball_anim', true)
 
         

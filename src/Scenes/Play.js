@@ -55,6 +55,10 @@ class Play extends Phaser.Scene {
         this.keys.CommaKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.COMMA)
         this.keys.ColonKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEMICOLON)
         this.keys.PeriodKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PERIOD)
+
+        //disable keys
+        this.input.keyboard.enabled = false
+
         //create backgorund
         this.background = this.add.sprite(0, 0, 'fightBachground').setOrigin(0, 0)
 
@@ -197,8 +201,10 @@ class Play extends Phaser.Scene {
 
             //place fight text
             this.fightText = this.add.sprite(game.config.width / 2, game.config.height / 2, 'fight')
-            this.time.delayedCall(1500 , ()=> {
+            this.input.keyboard.enabled = true
+            this.time.delayedCall(1000 , ()=> {
                 this.fightText.destroy()
+                
                 this.roundStarted = true
                 //99-second play clock
                 this.clock = this.time.delayedCall(99000, () => {

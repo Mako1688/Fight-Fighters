@@ -7,7 +7,7 @@ class Player2 extends Phaser.Physics.Arcade.Sprite {
         this.body.setCollideWorldBounds(true)
         // Set the initial size of the physics body
         this.body.setSize(60, 120)
-        this.body.setImmovable(true)
+        this.body.immovable = true
 
         // Define custom hitbox properties for different animations
         this.customHitboxes = {
@@ -35,41 +35,41 @@ class Player2 extends Phaser.Physics.Arcade.Sprite {
         }, [scene, this])   // pass these as arguments to maintain scene/object context in the FSM
 
         // Add health-related properties
-        this.maxHealth = 100;
-        this.currentHealth = this.maxHealth;
+        this.maxHealth = 100
+        this.currentHealth = this.maxHealth
 
         // Health bar scale factor
-        this.healthBarScale = 4;
+        this.healthBarScale = 4
 
         // Create a graphics object for the health bar background
-        this.healthBarBackground = scene.add.graphics();
-        this.healthBarBackground.fillStyle(0x000000, 0.5);
-        this.healthBarBackground.fillRect(game.config.width / 2 + 60, 0, 100 * this.healthBarScale, 10 * this.healthBarScale);
+        this.healthBarBackground = scene.add.graphics()
+        this.healthBarBackground.fillStyle(0x000000, 0.5)
+        this.healthBarBackground.fillRect(game.config.width / 2 + 60, 0, 100 * this.healthBarScale, 10 * this.healthBarScale)
 
         // Create a graphics object for the health bar
-        this.healthBar = scene.add.graphics();
-        this.healthBar.fillStyle(0x00ff00);
-        this.healthBar.fillRect(game.config.width / 2 + 60, 0, 100 * this.healthBarScale, 10 * this.healthBarScale);
+        this.healthBar = scene.add.graphics()
+        this.healthBar.fillStyle(0x00ff00)
+        this.healthBar.fillRect(game.config.width / 2 + 60, 0, 100 * this.healthBarScale, 10 * this.healthBarScale)
 
     }
 
     decreaseHealth(amount) {
-        this.currentHealth -= amount;
+        this.currentHealth -= amount
 
         // Check if the player is defeated (optional)
         if (this.currentHealth <= 0) {
-            this.currentHealth = 0;
+            this.currentHealth = 0
             // Perform actions for player defeat if needed
         }
 
         // Update the health bar
-        const healthPercentage = Phaser.Math.Clamp(this.currentHealth / this.maxHealth, 0, 1);
-        const healthBarWidth = 100 * this.healthBarScale * healthPercentage;
+        const healthPercentage = Phaser.Math.Clamp(this.currentHealth / this.maxHealth, 0, 1)
+        const healthBarWidth = 100 * this.healthBarScale * healthPercentage
 
         // Clear and update the health bar width
-        this.healthBar.clear();
-        this.healthBar.fillStyle(0x00ff00);
-        this.healthBar.fillRect(game.config.width / 2 + 60, 0, healthBarWidth, 10 * this.healthBarScale);
+        this.healthBar.clear()
+        this.healthBar.fillStyle(0x00ff00)
+        this.healthBar.fillRect(game.config.width / 2 + 60, 0, healthBarWidth, 10 * this.healthBarScale)
     }
 
 
@@ -590,7 +590,7 @@ class SpecialState2 extends State2 {
 
     execute(scene, player) {
 
-        scene.fireball2.x -= 6
+        scene.fireball2.x -= 5
         scene.fireball2.anims.play('fireball_anim', true)
 
         
