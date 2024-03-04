@@ -317,9 +317,9 @@ class Load extends Phaser.Scene {
         this.anims.create({
             key: 'r_hurt',
             frames: this.anims.generateFrameNumbers('rumble_hurt', { 
-                start: 0, 
-                end: 6, 
-                first: 0
+                start: 4, 
+                end: 0, 
+                first: 4
             }),
             frameRate: 12,
         })
@@ -388,6 +388,6 @@ class Load extends Phaser.Scene {
     }
 
     update() {
-        this.scene.start('playScene')
+        this.scene.start('titleScene')
     }
 }

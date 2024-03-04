@@ -3,7 +3,9 @@ class Win extends Phaser.Scene {
         super('winScene')
     }
 
-    init() {
+    init(data) {
+        this.p1Wins = data.p1Wins
+        this.p2Wins = data.p2Wins
 
     }
 

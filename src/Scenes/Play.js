@@ -9,6 +9,9 @@ class Play extends Phaser.Scene {
         this.p1Karate = data.p1Karate
         this.p2Rumble = data.p2Rumble
         this.p2Karate = data.p2Karate
+        this.roundCounter = data.roundCounter
+        this.p1Wins = data.p1Wins
+        this.p2Wins = data.p2Wins
 
     }
 
@@ -17,6 +20,12 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        if(this.p1Wins == 2 || this.p2Wins == 2) {
+            this.scene.start('winScene', {
+                p1Wins: this.p1Wins,
+                p2Wins: this.p2Wins
+            })
+        }
         this.gameOver = false
         this.roundStarted = false
         // setup keyboard input
@@ -46,10 +55,6 @@ class Play extends Phaser.Scene {
         this.keys.CommaKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.COMMA)
         this.keys.ColonKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEMICOLON)
         this.keys.PeriodKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PERIOD)
-        
-
-
-        this.roundCounter = 1
         //create backgorund
         this.background = this.add.sprite(0, 0, 'fightBachground').setOrigin(0, 0)
 
@@ -80,6 +85,8 @@ class Play extends Phaser.Scene {
         this.p1activeHitboxes = []
         this.p2activeHitboxes = []
 
+        this.physics.add.collider(this.player1, this.player2)
+
         //ready ... fight
         this.roundStart(this.roundCounter)
 
@@ -89,17 +96,46 @@ class Play extends Phaser.Scene {
     update() {
         this.player1FSM.step()
         this.player2FSM.step()
-        // Check for collisions between players
-        this.physics.world.collide(this.player1, this.player2)
         
         // Check for hitbox collisions with the target player
         this.physics.world.collide(this.p1activeHitboxes, this.player2, this.handleHitboxCollision, null, this)
         this.physics.world.collide(this.p2activeHitboxes, this.player1, this.handleHitboxCollision, null, this)
 
+        if (this.fireball && this.player2) {
+            this.physics.world.overlap(this.fireball, this.player2, this.handleHitboxCollision, null, this);
+        }
+        
+        if (this.fireball2 && this.player1) {
+            this.physics.world.overlap(this.fireball2, this.player1, this.handleHitboxCollision, null, this);
+        }
+
+        if(this.player1.currentHealth == 0){
+            this.p2Wins += 1
+            this.gameOver = true
+        }
+
+        if(this.player2.currentHealth == 0){
+            this.p1Wins += 1
+            this.gameOver = true
+        }
+
 
         if (!this.gameOver && this.roundStarted == true) {
             // Add a game over display clock
             this.clockText.text = Math.trunc((99000 - (this.clock.getElapsed())) / 1000)
+        }
+
+        if(this.gameOver == true){
+            this.roundCounter+= 1
+            this.scene.restart({
+                p1Karate: this.p1Karate,
+                p1Rumble: this.p1Rumble,
+                p2Karate: this.p2Karate,
+                p2Rumble: this.p2Rumble,
+                roundCounter: this.roundCounter,
+                p1Wins: this.p1Wins,
+                p2Wins: this.p2Wins
+            })
         }
     }
 
@@ -108,9 +144,16 @@ class Play extends Phaser.Scene {
         if (!hitbox.hasHit) {
             // Perform your collision logic here
             console.log("Valid Collision detected!")
+            if(target == this.player1){
+                this.player1FSM.transition('hurt')
+            }
+
+            if(target == this.player2){
+                this.player2FSM.transition('hurt')
+            }
 
             // Example: Decrease target player's health
-            //target.decreaseHealth(1) // Adjust the amount as needed
+            target.decreaseHealth(3) // Adjust the amount as needed
 
             // Set the flag to indicate that the hitbox has hit
             hitbox.hasHit = true

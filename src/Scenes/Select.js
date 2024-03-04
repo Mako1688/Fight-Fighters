@@ -244,6 +244,9 @@ class Select extends Phaser.Scene {
                         p1Rumble: this.p1Rumble,
                         p2Karate: this.p2Karate,
                         p2Rumble: this.p2Rumble,
+                        roundCounter: 1,
+                        p1Wins: 0,
+                        p2Wins: 0
                     })
                 }.bind(this) // Ensure 'this' refers to the current scene inside the onComplete callback
             })

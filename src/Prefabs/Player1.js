@@ -4,10 +4,6 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this)           // add Hero to existing scene
         scene.physics.add.existing(this)   // add physics body to scene
 
-        // set custom player properties 
-        this.dashCooldown = 300    // in ms
-        this.hurtTimer = 250       // in ms
-
         this.body.setCollideWorldBounds(true)
         // Set the initial size of the physics body
         this.body.setSize(60, 120)
@@ -39,37 +35,37 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
         }, [scene, this])   // pass these as arguments to maintain scene/object context in the FSM
 
         // Add health-related properties
-        this.maxHealth = 100
-        this.currentHealth = this.maxHealth
+        this.maxHealth = 100;
+        this.currentHealth = this.maxHealth;
+        this.healthBarScale = 4; // Scale factor
 
         // Create a graphics object for the health bar background
-        this.healthBarBackground = scene.add.graphics()
-        this.healthBarBackground.fillStyle(0x000000, 0.5)
-        this.healthBarBackground.fillRect(0, 0, 100, 10)
+        this.healthBarBackground = scene.add.graphics();
+        this.healthBarBackground.fillStyle(0x000000, 0.5);
+        this.healthBarBackground.fillRect(0, 0, 100 * this.healthBarScale, 10 * this.healthBarScale);
 
         // Create a graphics object for the health bar
-        this.healthBar = scene.add.graphics()
-        this.healthBar.fillStyle(0x00ff00)
-        this.healthBar.fillRect(0, 0, 100, 10)
+        this.healthBar = scene.add.graphics();
+        this.healthBar.fillStyle(0x00ff00);
+        this.healthBar.fillRect(0, 0, 100 * this.healthBarScale, 10 * this.healthBarScale);
+
     }
 
     decreaseHealth(amount) {
+        // Calculate the new health bar width
         this.currentHealth -= amount;
-
-        // Check if the player is defeated (optional)
         if (this.currentHealth <= 0) {
-            this.currentHealth = 0
+            this.currentHealth = 0;
             // Perform actions for player defeat if needed
         }
 
-        // Update the health bar
-        const healthPercentage = this.currentHealth / this.maxHealth
-        const healthBarWidth = 100 * Phaser.Math.Clamp(healthPercentage, 0, 1)
+        const healthPercentage = Phaser.Math.Clamp(this.currentHealth / this.maxHealth, 0, 1);
+        const healthBarWidth = 100 * this.healthBarScale * healthPercentage;
 
-        // Update the health bar width
-        this.healthBar.clear()
-        this.healthBar.fillStyle(0x00ff00)
-        this.healthBar.fillRect(0, 0, healthBarWidth, 10)
+        // Clear and update the health bar width
+        this.healthBar.clear();
+        this.healthBar.fillStyle(0x00ff00);
+        this.healthBar.fillRect(100 * this.healthBarScale - healthBarWidth, 0, healthBarWidth, 10 * this.healthBarScale);
     }
 
     createHitbox(hitboxConfig, scene) {
@@ -227,14 +223,14 @@ class MoveState1 extends State1 {
             //play walk animation backwards
             player.anims.playReverse('r_walk', true)
             //set velocity
-            player.setVelocityX(-200)
+            player.setVelocityX(-275)
 
             
         }else if(right.isDown) {
             //play walk animation forwards
             player.anims.play('r_walk', true)
             //set velocity
-            player.setVelocityX(200)
+            player.setVelocityX(275)
 
         }
 
@@ -307,21 +303,19 @@ class CrouchState1 extends State1 {
 class BlockState1 extends State1 {
     enter(scene, player) {
         console.log("p1 block")
-        //freeze velocity
+        // Freeze velocity
         player.setVelocity(0)
         player.anims.stop()
 
-        //play crouch animation
+        // Play block animation
         player.anims.play('r_block')
 
-        //make immune to hits
-
-        
-
+        // Disable player's body collisions
+        player.body.enable = false
     }
 
     execute(scene, player) {
-        // use destructuring to make a local copy of the keyboard object
+        // Use destructuring to make a local copy of the keyboard object
         const left = scene.keys.AKey
         const right = scene.keys.DKey
         const down = scene.keys.SKey
@@ -330,42 +324,46 @@ class BlockState1 extends State1 {
         const special = scene.keys.TKey
         const block = scene.keys.GKey
 
-        // Pause the crouch animation on the last frame
+        // Pause the block animation on the last frame
         player.anims.pause(player.anims.currentAnim.frames[2])
 
-        // transition to idle if release crouch key
-        if(Phaser.Input.Keyboard.JustUp(block)) {
+        // Transition to idle if release block key
+        if (Phaser.Input.Keyboard.JustUp(block)) {
+            player.body.enable = true
             this.stateMachine.transition('idle')
             return
         }
 
-
-        //transition to move if movement keys pressed
-        if(Phaser.Input.Keyboard.JustDown(left) || Phaser.Input.Keyboard.JustDown(right)){
+        // Transition to move if movement keys pressed
+        if (Phaser.Input.Keyboard.JustDown(left) || Phaser.Input.Keyboard.JustDown(right)) {
+            player.body.enable = true
             this.stateMachine.transition('move')
             return
         }
 
-        //transition to punch if punch key pressed
-        if(Phaser.Input.Keyboard.JustDown(punch)){
+        // Transition to punch if punch key pressed
+        if (Phaser.Input.Keyboard.JustDown(punch)) {
+            player.body.enable = true
             this.stateMachine.transition('punch')
             return
         }
 
-        //transition to kick if kick key pressed
-        if(Phaser.Input.Keyboard.JustDown(kick)){
+        // Transition to kick if kick key pressed
+        if (Phaser.Input.Keyboard.JustDown(kick)) {
+            player.body.enable = true
             this.stateMachine.transition('kick')
             return
         }
 
-        //transition to special if special key pressed
-        if(Phaser.Input.Keyboard.JustDown(special)){
+        // Transition to special if special key pressed
+        if (Phaser.Input.Keyboard.JustDown(special)) {
+            player.body.enable = true
             this.stateMachine.transition('special')
             return
         }
     }
-
 }
+
 
 class PunchState1 extends State1 {
     enter(scene, player) {
@@ -607,6 +605,7 @@ class DownSpecialState1 extends State1 {
     enter(scene, player) {
         console.log("p1 downspecial")
         player.setVelocity(0)
+        player.setVelocityX(100)
         player.anims.stop()
 
         player.anims.play('r_down_special')
@@ -616,6 +615,7 @@ class DownSpecialState1 extends State1 {
         player.enableHitbox(player.downSpecialHitbox, scene)
 
         player.once('animationcomplete', () => {    //callback after anim completes
+            player.setVelocityX(0)
             player.disableHitbox(player.downSpecialHitbox, scene)
             this.stateMachine.transition('idle')
             return
@@ -625,6 +625,7 @@ class DownSpecialState1 extends State1 {
     }
 
     execute(scene, player) {
+        player.downSpecialHitbox.x += 1
 
         //play down special animation transition to idle when finished
 
@@ -636,6 +637,7 @@ class DownSpecialState1 extends State1 {
 class HurtState1 extends State1 {
     enter(scene, player) {
         console.log("p1 hurt")
+        player.setVelocity(0)
         player.anims.stop()
         //move slightly away from other player
 
