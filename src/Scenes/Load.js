@@ -66,38 +66,38 @@ class Load extends Phaser.Scene {
         })
 
         this.load.spritesheet('rumble_punch', './assets/SpriteSheets/Rumble_Punch.png', {
-            frameWidth: 160,
-            frameHeight: 152,
+            frameWidth: 140,
+            frameHeight: 120,
             startFrame:  0,
             endFrames: 6
         })
 
         this.load.spritesheet('rumble_down_punch', './assets/SpriteSheets/Rumble_DownPunch.png', {
-            frameWidth: 152,
-            frameHeight: 144,
+            frameWidth: 125,
+            frameHeight: 145,
             startFrame:  0,
             endFrames: 6
         })
 
         this.load.spritesheet('rumble_walk', './assets/SpriteSheets/Rumble_Walk.png', {
-            frameWidth: 152,
-            frameHeight: 144,
+            frameWidth: 110,
+            frameHeight: 130,
             startFrame:  0,
             endFrames: 7
         })
 
         this.load.spritesheet('rumble_down_kick', './assets/SpriteSheets/Rumble_Down_Kick.png', {
-            frameWidth: 172,
-            frameHeight: 166,
+            frameWidth: 150,
+            frameHeight: 145,
             startFrame:  0,
             endFrames: 18
         })
 
         this.load.spritesheet('rumble_kick', './assets/SpriteSheets/Rumble_Kick.png', {
-            frameWidth: 160,
-            frameHeight: 192,
+            frameWidth: 150,
+            frameHeight: 135,
             startFrame:  0,
-            endFrames: 8
+            endFrames: 7
         })
 
         this.load.spritesheet('rumble_special', './assets/SpriteSheets/Rumble_Special.png', {
@@ -278,7 +278,7 @@ class Load extends Phaser.Scene {
             key: 'r_kick',
             frames: this.anims.generateFrameNumbers('rumble_kick', { 
                 start: 0, 
-                end: 4, 
+                end: 7, 
                 first: 0
             }),
             frameRate: 12,
@@ -388,6 +388,6 @@ class Load extends Phaser.Scene {
     }
 
     update() {
-        this.scene.start('titleScene')
+        this.scene.start('playScene')
     }
 }

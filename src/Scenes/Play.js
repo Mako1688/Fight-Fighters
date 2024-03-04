@@ -39,8 +39,13 @@ class Play extends Phaser.Scene {
         this.keys.GKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.G)
 
         //player 2 keys
-        // this.keys.Key = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
-        // this.keys.FKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
+        this.keys.LeftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
+        this.keys.RightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
+        this.keys.DownKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN)
+        this.keys.LKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L)
+        this.keys.CommaKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.COMMA)
+        this.keys.ColonKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEMICOLON)
+        this.keys.PeriodKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PERIOD)
         
 
 
@@ -61,18 +66,19 @@ class Play extends Phaser.Scene {
             fixedWidth: 0,
         }
 
-        this.clockText = this.add.text(game.config.width / 2, 30, '99', menuConfig)
+        this.clockText = this.add.text(game.config.width / 2, 30, '99', menuConfig).setOrigin(0.5)
 
         //create ref
 
         //create players
         //bracket notation:
         //this[this.p1Rumble]
-        this.player1 = new Player1(this, game.config.width / 4, game.config.height / 3 * 2, 'rumble_idle', 0).setOrigin(0.5, 0.5).setScale(2)
-        //this.player2 = new Player2(this, game.config.width / 4 * 3, game.config.height / 4*3 + 50, 'karate_idle', 0).setOrigin(1, 1).setScale(2)
+        this.player1 = new Player1(this, game.config.width / 4, game.config.height / 5 * 4, 'rumble_idle', 0).setOrigin(0.5, 1).setScale(2)
+        this.player2 = new Player2(this, game.config.width / 4 * 3, game.config.height / 5 * 4, 'rumble_idle', 0).setOrigin(0.5, 1).setScale(2).setFlipX(true)
 
         
-
+        this.p1activeHitboxes = []
+        this.p2activeHitboxes = []
 
         //ready ... fight
         this.roundStart(this.roundCounter)
@@ -82,14 +88,38 @@ class Play extends Phaser.Scene {
 
     update() {
         this.player1FSM.step()
-        //this.player2FSM.step()
+        this.player2FSM.step()
+        // Check for collisions between players
+        this.physics.world.collide(this.player1, this.player2)
+        
+        // Check for hitbox collisions with the target player
+        this.physics.world.collide(this.p1activeHitboxes, this.player2, this.handleHitboxCollision, null, this)
+        this.physics.world.collide(this.p2activeHitboxes, this.player1, this.handleHitboxCollision, null, this)
 
-        if (!this.gameOver && this.roundStarted == true) {  // Add a game over
-            //display clock
+
+        if (!this.gameOver && this.roundStarted == true) {
+            // Add a game over display clock
             this.clockText.text = Math.trunc((99000 - (this.clock.getElapsed())) / 1000)
         }
-
     }
+
+    handleHitboxCollision(hitbox, target) {
+        // Check if the hitbox has already registered a hit
+        if (!hitbox.hasHit) {
+            // Perform your collision logic here
+            console.log("Valid Collision detected!")
+
+            // Example: Decrease target player's health
+            //target.decreaseHealth(1) // Adjust the amount as needed
+
+            // Set the flag to indicate that the hitbox has hit
+            hitbox.hasHit = true
+
+            // Additional logic based on your requirements
+        }
+    }
+
+    
 
     roundStart(roundNum) {
         let menuConfig = {
@@ -131,7 +161,7 @@ class Play extends Phaser.Scene {
                 this.clock = this.time.delayedCall(99000, () => {
                     this.gameOver = true
                 }, null, this)
-                this.clockText = this.add.text(game.config.width / 2, 30, (this.clock.getElapsed() / 100), menuConfig)
+                this.clockText = this.add.text(game.config.width / 2, 30, (this.clock.getElapsed() / 100), menuConfig).setOrigin(0.5)
                 
     
             })
