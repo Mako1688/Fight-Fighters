@@ -225,26 +225,7 @@ class Play extends Phaser.Scene {
 
             //play ref animation
 
-            //enable controls
             
-
-            //define p1 keys
-            // p1Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A)
-            // p1Right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
-            // p1Down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S)
-            // p1Punch = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R)
-            // p1Kick = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F)
-            // p1Special = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T)
-            // p1Block = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.G)
-
-            // //define p2 keys
-            // p2Left = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT)
-            // p2Right = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT)
-            // p2Down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN)
-            // p2Punch = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L)
-            // p2Kick = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.COMMA)
-            // p2Special = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEMICOLON)
-            // p2Block = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PERIOD)
 
         })
 
