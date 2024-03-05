@@ -29,13 +29,6 @@ class Play extends Phaser.Scene {
         this.gameOver = false
         this.roundStarted = false
         // setup keyboard input
-        // const left = scene.keys.AKey
-        // const right = scene.keys.DKey
-        // const down = scene.keys.SKey
-        // const punch = scene.keys.RKey
-        // const kick = scene.keys.FKey
-        // const special = scene.keys.TKey
-        // const block = scene.keys.GKey
         this.keys = this.input.keyboard.createCursorKeys()
         
         //player keys
@@ -55,6 +48,8 @@ class Play extends Phaser.Scene {
         this.keys.CommaKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.COMMA)
         this.keys.ColonKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEMICOLON)
         this.keys.PeriodKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PERIOD)
+
+        BackspaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
 
         //disable keys
         this.input.keyboard.enabled = false
@@ -98,6 +93,12 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+        if(Phaser.Input.Keyboard.JustDown(BackspaceKey)){
+            this.scene.pause('playScene')
+            this.scene.launch('pauseScene')
+            this.scene.moveUp('pauseScene')
+        }
+
         this.player1FSM.step()
         this.player2FSM.step()
         

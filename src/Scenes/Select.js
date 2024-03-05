@@ -241,10 +241,11 @@ class Select extends Phaser.Scene {
             // Create a tween to move the airplane
             var tween = this.tweens.add({
                 targets: this.airplane,
-                x: 400,
+                x: 470,
                 y: 226,
                 duration: 1000,
                 ease: 'Linear',
+                hold: 1000,
                 onComplete: function () {
                     // Enable controls again
                     p1Left.enabled = true
