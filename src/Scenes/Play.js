@@ -26,6 +26,10 @@ class Play extends Phaser.Scene {
                 p2Wins: this.p2Wins
             })
         }
+        //launch pause scene
+        this.scene.launch('pauseScene')
+        this.scene.moveDown('pauseScene')
+
         this.gameOver = false
         this.roundStarted = false
         // setup keyboard input
@@ -93,10 +97,10 @@ class Play extends Phaser.Scene {
     }
 
     update() {
-        if(Phaser.Input.Keyboard.JustDown(BackspaceKey)){
-            this.scene.pause('playScene')
-            this.scene.launch('pauseScene')
+        if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
             this.scene.moveUp('pauseScene')
+            this.scene.pause('playScene')
+            
         }
 
         this.player1FSM.step()
