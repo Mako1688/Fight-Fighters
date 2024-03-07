@@ -25,6 +25,7 @@ class Load extends Phaser.Scene {
         this.load.image('Rumble Name', './assets/Sprites/Rumble Name.png')
         this.load.image('airplane', './assets/Sprites/Airplane.png')
         this.load.image('fightBachground', './assets/Sprites/fightFightersBackground.png')
+        this.load.image('particle', './assets/Sprites/Cross.png')
 
         //load audio
         this.load.audio('intro', './assets/Sounds/intro.mp3')

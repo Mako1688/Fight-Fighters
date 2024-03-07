@@ -165,13 +165,25 @@ class Play extends Phaser.Scene {
     }
 
     handleHitboxCollision(hitbox, target) {
+        this.deathEmitter = this.add.particles(0, 0, 'particle', {
+            speed: 500,
+            scale: { start: 4, end: 0.1 },
+            alpha: { start: 1, end: 0 },
+            quantity: 50,
+            lifespan: 200,
+            frequency: -1,
+            tint: 0xFFFF00
+        })
         // Check if the hitbox has already registered a hit
         if (!hitbox.hasHit) {
-            
+            //hit particles
+            this.deathEmitter.emitParticleAt((hitbox.x + target.x) / 2, hitbox.y)
             // Perform your collision logic here
             console.log("Valid Collision detected!")
             this.sound.play('hit')
             if(target == this.player1){
+                
+                
                 this.p2Cancel = true
                 this.player1FSM.transition('hurt')
             }
@@ -192,9 +204,26 @@ class Play extends Phaser.Scene {
     }
 
     handleFireballCollision(fireball1, fireball2) {
+        this.deathEmitter = this.add.particles(0, 0, 'particle', {
+            speed: 500,
+            scale: { start: 4, end: 0.1 },
+            alpha: { start: 1, end: 0 },
+            quantity: 50,
+            lifespan: 100,
+            frequency: -1,
+            tint: 0xFF0000
+        })
+        //add particle emitter
+        this.deathEmitter.emitParticleAt(fireball1.x, fireball1.y)
+        this.deathEmitter.emitParticleAt(fireball2.x, fireball2.y)
+
         //destroy both
         fireball1.destroy()
         fireball2.destroy()
+        
+        
+
+        
     }
 
     
