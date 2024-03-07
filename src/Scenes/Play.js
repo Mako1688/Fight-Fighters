@@ -121,12 +121,17 @@ class Play extends Phaser.Scene {
         this.physics.world.collide(this.p1activeHitboxes, this.player2, this.handleHitboxCollision, null, this)
         this.physics.world.collide(this.p2activeHitboxes, this.player1, this.handleHitboxCollision, null, this)
 
+        //make collisions for fireballs
+        if(this.fireball && this.fireball2){
+            this.physics.world.collide(this.fireball, this.fireball2, this.handleFireballCollision, null, this)
+        }
+
         if (this.fireball && this.player2) {
-            this.physics.world.overlap(this.fireball, this.player2, this.handleHitboxCollision, null, this);
+            this.physics.world.overlap(this.fireball, this.player2, this.handleHitboxCollision, null, this)
         }
         
         if (this.fireball2 && this.player1) {
-            this.physics.world.overlap(this.fireball2, this.player1, this.handleHitboxCollision, null, this);
+            this.physics.world.overlap(this.fireball2, this.player1, this.handleHitboxCollision, null, this)
         }
 
         if(this.player1.currentHealth == 0){
@@ -184,6 +189,12 @@ class Play extends Phaser.Scene {
 
             // Additional logic based on your requirements
         }
+    }
+
+    handleFireballCollision(fireball1, fireball2) {
+        //destroy both
+        fireball1.destroy()
+        fireball2.destroy()
     }
 
     

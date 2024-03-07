@@ -650,9 +650,13 @@ class SpecialState2 extends State2 {
 
         player.anims.play('r_special')
         scene.fireball2 = scene.physics.add.sprite(player.x, player.height + 280, 'fireball', 0).setFlipX(true)
+        scene.fireball2.body.setSize(70, 70)
+        scene.fireball2.anims.play('fireball_anim', true)
         
         player.once('animationcomplete', () => {    //callback after anim completes
-            scene.fireball2.destroy()
+            if(scene.fireball2){
+                scene.fireball2.destroy()
+            }
             scene.p2Cancel = false
             this.stateMachine.transition('idle')
             return
@@ -664,8 +668,11 @@ class SpecialState2 extends State2 {
 
     execute(scene, player) {
 
-        scene.fireball2.x -= 5
-        scene.fireball2.anims.play('fireball_anim', true)
+        //if fireball exists
+        if(scene.fireball2){
+            scene.fireball2.x -= 5
+        }
+        
 
         
 

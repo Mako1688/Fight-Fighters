@@ -305,6 +305,7 @@ class Load extends Phaser.Scene {
                 end: 4, 
                 first: 0
             }),
+            repeat: -1,
             frameRate: 12,
         })
 
