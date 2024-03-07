@@ -45,7 +45,7 @@ let p1Left, p1Right, p1Down, p1Punch, p1Kick, p1Special, p1Block
 let p2Left, p2Right, p2Down, p2Punch, p2Kick, p2Special, p2Block
 
 //pause bind
-let BackspaceKey
+let BackspaceKey, EnterKey
 
 //set music boolean
 let musicPlaying = false

@@ -14,6 +14,7 @@ class Win extends Phaser.Scene {
     }
 
     create() {
+        this.scene.stop('pauseScene')
         //add any button to start text
         // Menu config
         let menuConfig = {

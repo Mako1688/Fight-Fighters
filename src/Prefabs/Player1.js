@@ -86,15 +86,19 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
     }
 
     disableHitbox(hitbox, scene) {
+        // Ensure hitbox is not null or undefined
+    if (hitbox) {
         // Remove hitbox from the activeHitboxes array
         const index = scene.p1activeHitboxes.indexOf(hitbox)
         if (index !== -1) {
             scene.p1activeHitboxes.splice(index, 1)
         }
-        if(hitbox.body){
+
+        // Ensure hitbox has a 'body' property before attempting to access it
+        if (hitbox.body) {
             hitbox.body.destroy()
         }
-        
+    }
     }
 
     
@@ -371,16 +375,32 @@ class PunchState1 extends State1 {
         player.setVelocity(0)
         player.anims.stop()
 
-        // Create and enable punch hitbox
+        // Clear existing animation update event listeners
+        player.off('animationupdate')
+
+        //play animation
+        player.anims.play('r_punch')
+
+        //makes hitbox
+        console.log('punch hitbox created')
         player.punchHitbox = player.createHitbox(player.customHitboxes.punch, scene)
         player.enableHitbox(player.punchHitbox, scene)
+        console.log(player.punchHitbox)
 
-        player.anims.play('r_punch')
+        //create hitbox on frame 2 of animation
+        player.on('animationupdate', (anim, frame) => {
+            if(anim.key === 'r_punch') {
+                if (frame.index === 5) {
+                    console.log('punch hitbox destroyed')
+                    player.disableHitbox(player.punchHitbox, scene)
+                }
+            }
+        })
 
         //play punch animation transition to idle when finished
         player.once('animationcomplete', () => {    //callback after anim completes
             console.log("Punch animation complete")
-            player.disableHitbox(player.punchHitbox, scene)
+            scene.p1Cancel = false
             this.stateMachine.transition('idle')
             return
         })
@@ -404,21 +424,21 @@ class PunchState1 extends State1 {
 
 
         //transition to special if special key pressed
-        if(Phaser.Input.Keyboard.JustDown(special)){
+        if(Phaser.Input.Keyboard.JustDown(special) && scene.p1Cancel == true){
             player.disableHitbox(player.punchHitbox, scene)
             this.stateMachine.transition('special')
             return
         }
 
         //transition to down punch if punch pressed again
-        if(Phaser.Input.Keyboard.JustDown(punch)) {
+        if(Phaser.Input.Keyboard.JustDown(punch) && scene.p1Cancel == true) {
             player.disableHitbox(player.punchHitbox, scene)
             this.stateMachine.transition('downPunch')
             return
         }
 
         //transition to down kick if kick pressed
-        if(Phaser.Input.Keyboard.JustDown(kick)) {
+        if(Phaser.Input.Keyboard.JustDown(kick) && scene.p1Cancel == true) {
             player.disableHitbox(player.punchHitbox, scene)
             this.stateMachine.transition('downKick')
             return
@@ -433,17 +453,32 @@ class DownPunchState1 extends State1 {
         player.setVelocity(0)
         player.anims.stop()
 
-        // Create and enable down punch hitbox
-        player.downPunchHitbox = player.createHitbox(player.customHitboxes.downpunch, scene)
-        player.enableHitbox(player.downPunchHitbox, scene)
+        // Clear existing animation update event listeners
+        player.off('animationupdate')
 
+        //play animation
         player.anims.play('r_down_punch')
-        
+
+        //create hitbox on frame 2 of animation
+        player.on('animationupdate', (anim, frame) => {
+            if(anim.key === 'r_down_punch') {
+                //create on 3rd frame
+                if (frame.index === 2) {
+                    console.log('down punch hitbox created')
+                    player.downPunchHitbox = player.createHitbox(player.customHitboxes.downpunch, scene)
+                    player.enableHitbox(player.downPunchHitbox, scene)
+                //destroy on 6th frame
+                } else if (frame.index === 4) {
+                    console.log('down punch hitbox destroyed')
+                    player.disableHitbox(player.downPunchHitbox, scene)
+                }
+            }
+        })
 
         //play  down punch animation transition to idle when finished
         player.once('animationcomplete', () => {    //callback after anim completes
             console.log("Down Punch animation complete")
-            player.disableHitbox(player.downPunchHitbox, scene)
+            scene.p1Cancel = false
             this.stateMachine.transition('idle')
             return
         })
@@ -466,7 +501,7 @@ class DownPunchState1 extends State1 {
         
 
         //transition to down special if special key pressed
-        if(Phaser.Input.Keyboard.JustDown(special)){
+        if(Phaser.Input.Keyboard.JustDown(special) && scene.p1Cancel == true){
             player.disableHitbox(player.downPunchHitbox, scene)
             this.stateMachine.transition('downSpecial')
             return
@@ -481,13 +516,31 @@ class KickState1 extends State1 {
         player.setVelocity(0)
         player.anims.stop()
 
-        // Create and enable kick hitbox
-        player.kickHitbox = player.createHitbox(player.customHitboxes.kick, scene)
-        player.enableHitbox(player.kickHitbox, scene)
+        // Clear existing animation update event listeners
+        player.off('animationupdate')
 
+        //play kick
         player.anims.play('r_kick')
+
+        //create hitbox on frame 2 of animation
+        player.on('animationupdate', (anim, frame) => {
+            if(anim.key === 'r_kick') {
+                //create on 3rd frame
+                if (frame.index === 2) {
+                    console.log('kick hitbox created')
+                    player.kickHitbox = player.createHitbox(player.customHitboxes.kick, scene)
+                    player.enableHitbox(player.kickHitbox, scene)
+                //destroy on 6th frame
+                } else if (frame.index === 5) {
+                    console.log('kick hitbox destroyed')
+                    player.disableHitbox(player.kickHitbox, scene)
+                }
+            }
+        })
+
+        
         player.once('animationcomplete', () => {    //callback after anim completes
-            player.disableHitbox(player.kickHitbox, scene)
+            scene.p1Cancel = false
             this.stateMachine.transition('idle')
             return
         })
@@ -506,21 +559,21 @@ class KickState1 extends State1 {
         //play kick animation transition to idle when finished
 
         //transition to special if special key pressed
-        if(Phaser.Input.Keyboard.JustDown(special)){
+        if(Phaser.Input.Keyboard.JustDown(special) && scene.p1Cancel == true){
             player.disableHitbox(player.kickHitbox, scene)
             this.stateMachine.transition('special')
             return
         }
 
         //transition to down punch if punch pressed again
-        if(Phaser.Input.Keyboard.JustDown(punch)) {
+        if(Phaser.Input.Keyboard.JustDown(punch) && scene.p1Cancel == true) {
             player.disableHitbox(player.kickHitbox, scene)
             this.stateMachine.transition('downPunch')
             return
         }
 
         //transition to down kick if kick pressed
-        if(Phaser.Input.Keyboard.JustDown(kick)) {
+        if(Phaser.Input.Keyboard.JustDown(kick) && scene.p1Cancel == true) {
             player.disableHitbox(player.kickHitbox, scene)
             this.stateMachine.transition('downKick')
             return
@@ -535,13 +588,30 @@ class DownKickState1 extends State1 {
         player.setVelocity(0)
         player.anims.stop()
 
-        // Create and enable down kick hitbox
-        player.downKickHitbox = player.createHitbox(player.customHitboxes.downkick, scene)
-        player.enableHitbox(player.downKickHitbox, scene)
+        // Clear existing animation update event listeners
+        player.off('animationupdate')
 
+        //play animation
         player.anims.play('r_down_kick')
+
+        //create hitbox on frame 2 of animation
+        player.on('animationupdate', (anim, frame) => {
+            if(anim.key === 'r_down_kick') {
+                //create on 3rd frame
+                if (frame.index === 5) {
+                    console.log('downkick hitbox created')
+                    player.downKickHitbox = player.createHitbox(player.customHitboxes.downkick, scene)
+                    player.enableHitbox(player.downKickHitbox, scene)
+                //destroy on 6th frame
+                } else if (frame.index === 13) {
+                    console.log('downkick hitbox destroyed')
+                    player.disableHitbox(player.downKickHitbox, scene)
+                }
+            }
+        })
+        
         player.once('animationcomplete', () => {    //callback after anim completes
-            player.disableHitbox(player.downKickHitbox, scene)
+            scene.p1Cancel = false
             this.stateMachine.transition('idle')
             return
         })
@@ -560,7 +630,7 @@ class DownKickState1 extends State1 {
 
         //play down kick animation transition to idle when finished
         //transition to down special if special key pressed
-        if(Phaser.Input.Keyboard.JustDown(special)){
+        if(Phaser.Input.Keyboard.JustDown(special) && scene.p1Cancel == true){
             player.disableHitbox(player.downKickHitbox, scene)
             this.stateMachine.transition('downSpecial')
             return
@@ -580,6 +650,7 @@ class SpecialState1 extends State1 {
         
         player.once('animationcomplete', () => {    //callback after anim completes
             scene.fireball.destroy()
+            
             this.stateMachine.transition('idle')
             return
         })
@@ -608,15 +679,32 @@ class DownSpecialState1 extends State1 {
         player.setVelocityX(100)
         player.anims.stop()
 
+        // Clear existing animation update event listeners
+        player.off('animationupdate')
+
+        //play animation
         player.anims.play('r_down_special')
 
-        // Create and enable down kick hitbox
-        player.downSpecialHitbox = player.createHitbox(player.customHitboxes.downspecial, scene)
-        player.enableHitbox(player.downSpecialHitbox, scene)
+        //create hitbox on frame 2 of animation
+        player.on('animationupdate', (anim, frame) => {
+            if(anim.key === 'r_down_special') {
+                //create on 3rd frame
+                if (frame.index === 2) {
+                    console.log('downspecial hitbox created')
+                    player.downSpecialHitbox = player.createHitbox(player.customHitboxes.downspecial, scene)
+                    player.enableHitbox(player.downSpecialHitbox, scene)
+                    player.downSpecialHitbox.x += 1
+                //destroy on 6th frame
+                } else if (frame.index === 4) {
+                    console.log('downspecial hitbox destroyed')
+                    player.disableHitbox(player.downSpecialHitbox, scene)
+                }
+            }
+        })
 
         player.once('animationcomplete', () => {    //callback after anim completes
             player.setVelocityX(0)
-            player.disableHitbox(player.downSpecialHitbox, scene)
+            
             this.stateMachine.transition('idle')
             return
         })
@@ -625,9 +713,6 @@ class DownSpecialState1 extends State1 {
     }
 
     execute(scene, player) {
-        player.downSpecialHitbox.x += 1
-
-        //play down special animation transition to idle when finished
 
     }
 }
@@ -645,8 +730,10 @@ class HurtState1 extends State1 {
         player.anims.play('r_hurt')
 
         player.once('animationcomplete', () => {    //callback after anim completes
-            this.stateMachine.transition('idle')
-            return
+            scene.time.delayedCall(200 , ()=> {
+                this.stateMachine.transition('idle')
+                return
+            })
         })
 
         //wait until hurt animation is complete before returning to idle

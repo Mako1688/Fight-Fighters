@@ -20,7 +20,9 @@ class Title extends Phaser.Scene {
         
 
         //define keys
-        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)    
+        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+        BackspaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE) 
+        EnterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER)
 
         //add any button to start text
         // Menu config
@@ -36,7 +38,7 @@ class Title extends Phaser.Scene {
             },
             fixedWidth: 0,
         }
-        this.add.text(game.config.width/2, game.config.height/4*3, 'PRESS SPACE BUTTON TO START', menuConfig).setOrigin(0.5, 0.5)
+        this.add.text(game.config.width/2, game.config.height/4*3, 'SPACE Button To START\nBACKSPACE Button For CONTROLS\nENTER Button For CREDITS', menuConfig).setOrigin(0.5, 0.5)
     }
 
     update() {
@@ -52,6 +54,22 @@ class Title extends Phaser.Scene {
                 this.intro.stop()
                 this.input.keyboard.enabled = true
                 this.scene.start('selectScene')
+            })
+            
+        }
+
+        //check if backspace pressed
+        if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
+            this.scene.start('pauseScene', {
+                scene: 'titleScene'
+            })
+            
+        }
+
+        //check if backspace pressed
+        if (Phaser.Input.Keyboard.JustDown(EnterKey)) {
+            this.scene.start('creditsScene', {
+                scene: 'titleScene'
             })
             
         }

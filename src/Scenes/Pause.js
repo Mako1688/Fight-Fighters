@@ -3,7 +3,9 @@ class Pause extends Phaser.Scene {
         super('pauseScene')
     }
 
-    init() {
+    init(data) {
+        //recieve data about which scene transitioned from
+        this.sceneFrom = data.scene
 
     }
 
@@ -27,7 +29,7 @@ class Pause extends Phaser.Scene {
         // Menu config
         let menuConfig = {
             fontFamily: 'PressStart2P',
-            fontSize: '24px',
+            fontSize: '26px',
             backgroundColor: '#000000',
             color: '#FFFFFF',
             align: 'left',
@@ -43,30 +45,45 @@ class Pause extends Phaser.Scene {
         menuConfig.align = 'right'
         this.add.text(game.config.width, 0, 'Player 2:', menuConfig).setOrigin(1, 0)
         //adjust font size
-        menuConfig.fontSize = '16px'
+        menuConfig.fontSize = '26px'
         menuConfig.align = 'left'
         //add control text
         this.add.text(0 + this.borderPadding, 0 + this.borderPadding, 'Use:\nA and D\nS\nR\nF\nT\nS+T\nG', menuConfig).setOrigin(0, 0)
-        this.add.text(120 + this.borderPadding, 0 + this.borderPadding, 'To do:\nMove ← or →\nCrouch\nPunch\nKick\nSpecial Move 1\nSpecial Move 2\nBlock', menuConfig).setOrigin(0, 0)
         menuConfig.align = 'right'
         this.add.text(game.config.width - this.borderPadding, 0 + this.borderPadding, 'Use:\n← and →\n↓\nL\n,\n;\n↓+;\n.', menuConfig).setOrigin(1, 0)
-        this.add.text(game.config.width - this.borderPadding - 120, 0 + this.borderPadding, 'To do:\nMove ← or →\nCrouch\nPunch\nKick\nSpecial Move 1\nSpecial Move 2\nBlock', menuConfig).setOrigin(1, 0)
+        menuConfig.align = 'center'
+        this.add.text(game.config.width / 2, 0 + this.borderPadding, 'To do:\nMove ← or →\nCrouch\nPunch\nKick\nSpecial Move 1\nSpecial Move 2\nBlock', menuConfig).setOrigin(0.5, 0)
 
         //show sample combos
         menuConfig.align = 'center'
         menuConfig.fontSize = '18px'
-        this.add.text(game.config.width / 2,  game.config.height / 2, 'Sample Combos:\nPunch x 2 + Special\nKick x 2 + Special \nPunch + Kick + Special', menuConfig).setOrigin(0.5, 0)
+        this.add.text(game.config.width / 2,  game.config.height / 2, 'Sample Combos:\nPunch x 2 + Special\nKick x 2 + Special \nPunch + Kick + Special\nKick + Punch + Special', menuConfig).setOrigin(0.5, 0)
 
         //show Backspace to unpause
+        menuConfig.fontSize = '24px'
+       this.add.text(game.config.width /2, game.config.height / 4 * 3, 'BACKSPACE To RETURN', menuConfig).setOrigin(0.5, 0)
 
     }
 
     update() {
-        if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
-            this.scene.moveDown('pauseScene')
-            this.scene.resume('playScene')
-            
+        //check if came from titleScene
+        if(this.sceneFrom == 'titleScene'){
+            if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
+                this.scene.start('titleScene')
+                this.scene.stop('pauseScene')
+                
+            }
         }
+
+        //check if came from playScene
+        if(this.sceneFrom == 'playScene'){
+            if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
+                this.scene.moveDown('pauseScene')
+                this.scene.resume('playScene')
+                
+            }
+        }
+        
         
 
     }

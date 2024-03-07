@@ -20,7 +20,14 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        //set cancellable normalx
+        this.p1Cancel = false
+        this.p2Cancel = false
+        //disable keys
+        this.input.keyboard.enabled = false
+
         if(this.p1Wins == 2 || this.p2Wins == 2) {
+            this.scene.stop('pauseScene')
             this.scene.start('winScene', {
                 p1Wins: this.p1Wins,
                 p2Wins: this.p2Wins
@@ -55,8 +62,7 @@ class Play extends Phaser.Scene {
 
         BackspaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
 
-        //disable keys
-        this.input.keyboard.enabled = false
+        
 
         //create backgorund
         this.background = this.add.sprite(0, 0, 'fightBachground').setOrigin(0, 0)
@@ -74,7 +80,11 @@ class Play extends Phaser.Scene {
             fixedWidth: 0,
         }
 
+        //add clock text
         this.clockText = this.add.text(game.config.width / 2, 30, '99', menuConfig).setOrigin(0.5)
+
+        //add pause text
+        this.add.text(game.config.width / 2, game.config.height, 'BACKSPACE To PAUSE', menuConfig).setOrigin(0.5, 1)
 
         //create ref
 
@@ -97,6 +107,7 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+        
         if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
             this.scene.moveUp('pauseScene')
             this.scene.pause('playScene')
@@ -151,14 +162,17 @@ class Play extends Phaser.Scene {
     handleHitboxCollision(hitbox, target) {
         // Check if the hitbox has already registered a hit
         if (!hitbox.hasHit) {
+            
             // Perform your collision logic here
             console.log("Valid Collision detected!")
             this.sound.play('hit')
             if(target == this.player1){
+                this.p2Cancel = true
                 this.player1FSM.transition('hurt')
             }
 
             if(target == this.player2){
+                this.p1Cancel = true
                 this.player2FSM.transition('hurt')
             }
 
