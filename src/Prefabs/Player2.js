@@ -372,7 +372,7 @@ class BlockState2 extends State2 {
 
 class PunchState2 extends State2 {
     enter(scene, player) {
-        console.log("p1 punch")
+        console.log("p2 punch")
         player.setVelocity(0)
         player.anims.stop()
 
@@ -642,6 +642,7 @@ class SpecialState2 extends State2 {
         
         player.once('animationcomplete', () => {    //callback after anim completes
             scene.fireball2.destroy()
+            scene.p2Cancel = false
             this.stateMachine.transition('idle')
             return
         })

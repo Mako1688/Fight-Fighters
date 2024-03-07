@@ -650,7 +650,7 @@ class SpecialState1 extends State1 {
         
         player.once('animationcomplete', () => {    //callback after anim completes
             scene.fireball.destroy()
-            
+            scene.p1Cancel = false
             this.stateMachine.transition('idle')
             return
         })
