@@ -78,9 +78,8 @@ class Pause extends Phaser.Scene {
         //check if came from playScene
         if(this.sceneFrom == 'playScene'){
             if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
-                this.scene.moveDown('pauseScene')
                 this.scene.resume('playScene')
-                
+                this.scene.moveDown('pauseScene')
             }
         }
         

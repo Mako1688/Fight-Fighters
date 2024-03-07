@@ -6,7 +6,7 @@ class Player2 extends Phaser.Physics.Arcade.Sprite {
 
         this.body.setCollideWorldBounds(true)
         // Set the initial size of the physics body
-        this.body.setSize(60, 120)
+        this.body.setSize(60, 120).setOffset(30, 0)
         this.body.immovable = true
 
         // Define custom hitbox properties for different animations
@@ -376,11 +376,17 @@ class PunchState2 extends State2 {
         player.setVelocity(0)
         player.anims.stop()
 
+        //readjust body hitbox
+        // player.body.setOffset(50, 0)
+
         // Clear existing animation update event listeners
         player.off('animationupdate')
 
         //play animation
         player.anims.play('r_punch')
+
+        //adjust hitbox
+        player.body.setOffset(60, 0)
 
         //makes hitbox
         console.log('punch hitbox created')
@@ -402,6 +408,7 @@ class PunchState2 extends State2 {
         player.once('animationcomplete', () => {    //callback after anim completes
             console.log("Punch animation complete")
             scene.p2Cancel = false
+            player.body.setOffset(30, 0)
             this.stateMachine.transition('idle')
             return
         })
@@ -514,6 +521,9 @@ class KickState2 extends State2 {
         //play kick
         player.anims.play('r_kick')
 
+        //adjust hitbox
+        player.body.setOffset(60, 0)
+
         //create hitbox on frame 2 of animation
         player.on('animationupdate', (anim, frame) => {
             if(anim.key === 'r_kick') {
@@ -533,6 +543,7 @@ class KickState2 extends State2 {
         
         player.once('animationcomplete', () => {    //callback after anim completes
             scene.p2Cancel = false
+            player.body.setOffset(30, 0)
             this.stateMachine.transition('idle')
             return
         })
