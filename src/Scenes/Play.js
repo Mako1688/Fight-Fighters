@@ -20,20 +20,18 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        if(!(this.scene.isActive('pauseScene'))) {
-            //launch pause scene
-            this.scene.launch('pauseScene', {
-                p1Karate: this.p1Karate,
-                p1Rumble: this.p1Rumble,
-                p2Karate: this.p2Karate,
-                p2Rumble: this.p2Rumble,
-                roundCounter: this.roundCounter,
-                p1Wins: this.p1Wins,
-                p2Wins: this.p2Wins,
-                sceneKey: 'playScene'
-            })
-            this.scene.moveDown('pauseScene')
-        }
+        //launch pause scene
+        this.scene.launch('pauseScene', {
+            p1Karate: this.p1Karate,
+            p1Rumble: this.p1Rumble,
+            p2Karate: this.p2Karate,
+            p2Rumble: this.p2Rumble,
+            roundCounter: this.roundCounter,
+            p1Wins: this.p1Wins,
+            p2Wins: this.p2Wins,
+            sceneKey: 'playScene'
+        })
+        this.scene.moveDown('pauseScene')
         
 
         //play song
@@ -183,6 +181,7 @@ class Play extends Phaser.Scene {
         }
 
         if(this.gameOver == true){
+            this.scene.stop('pauseScene')
             this.roundCounter+= 1
             this.scene.restart({
                 p1Karate: this.p1Karate,
