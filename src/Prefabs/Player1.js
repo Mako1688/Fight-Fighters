@@ -390,8 +390,22 @@ class PunchState1 extends State1 {
         //create hitbox on frame 2 of animation
         player.on('animationupdate', (anim, frame) => {
             if(anim.key === 'r_punch') {
-                if (frame.index === 5) {
+                if (frame.index === 2) {
                     console.log('punch hitbox destroyed')
+                    player.disableHitbox(player.punchHitbox, scene)
+                }
+            }
+        })
+
+        //create hitbox on frame 2 of animation
+        player.on('animationupdate', (anim, frame) => {
+            if(anim.key === 'r_punch') {
+                if (frame.index === 4) {
+                    console.log('punch hitbox 2 created')
+                    player.punchHitbox = player.createHitbox(player.customHitboxes.punch, scene)
+                    player.enableHitbox(player.punchHitbox, scene)
+                } else if(frame.index === 6){
+                    console.log('punch hitbox 2 destroyed')
                     player.disableHitbox(player.punchHitbox, scene)
                 }
             }
@@ -400,6 +414,7 @@ class PunchState1 extends State1 {
         //play punch animation transition to idle when finished
         player.once('animationcomplete', () => {    //callback after anim completes
             console.log("Punch animation complete")
+            
             scene.p1Cancel = false
             this.stateMachine.transition('idle')
             return

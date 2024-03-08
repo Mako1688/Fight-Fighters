@@ -20,6 +20,7 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+
         //set cancellable normalx
         this.p1Cancel = false
         this.p2Cancel = false
@@ -33,9 +34,7 @@ class Play extends Phaser.Scene {
                 p2Wins: this.p2Wins
             })
         }
-        //launch pause scene
-        this.scene.launch('pauseScene')
-        this.scene.moveDown('pauseScene')
+        
 
         this.gameOver = false
         this.roundStarted = false
@@ -108,11 +107,15 @@ class Play extends Phaser.Scene {
 
     update() {
         
-        if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
-            this.scene.moveUp('pauseScene')
-            this.scene.pause('playScene')
-            
+        if(this.roundStarted === true){
+            if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
+                this.scene.pause('playScene', {
+                    sceneFrom: 'playScene'
+                })
+                this.scene.start('pauseScene')
+            }
         }
+        
 
         this.player1FSM.step()
         this.player2FSM.step()

@@ -397,8 +397,22 @@ class PunchState2 extends State2 {
         //create hitbox on frame 2 of animation
         player.on('animationupdate', (anim, frame) => {
             if(anim.key === 'r_punch') {
-                if (frame.index === 5) {
+                if (frame.index === 2) {
                     console.log('punch hitbox destroyed')
+                    player.disableHitbox(player.punchHitbox, scene)
+                }
+            }
+        })
+
+        //create hitbox on frame 2 of animation
+        player.on('animationupdate', (anim, frame) => {
+            if(anim.key === 'r_punch') {
+                if (frame.index === 4) {
+                    console.log('punch hitbox 2 created')
+                    player.punchHitbox = player.createHitbox(player.customHitboxes.punch, scene)
+                    player.enableHitbox(player.punchHitbox, scene)
+                } else if(frame.index === 6){
+                    console.log('punch hitbox 2 destroyed')
                     player.disableHitbox(player.punchHitbox, scene)
                 }
             }
@@ -591,6 +605,9 @@ class DownKickState2 extends State2 {
         player.setVelocity(0)
         player.anims.stop()
 
+        //adjust hitbox
+        player.body.setOffset(60, 0)
+
         // Clear existing animation update event listeners
         player.off('animationupdate')
 
@@ -614,6 +631,8 @@ class DownKickState2 extends State2 {
         })
         
         player.once('animationcomplete', () => {    //callback after anim completes
+            //adjust hitbox
+            player.body.setOffset(30, 0)
             scene.p2Cancel = false
             this.stateMachine.transition('idle')
             return
