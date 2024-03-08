@@ -114,6 +114,9 @@ class IdleState2 extends State2 {
         //stop [player]
         player.setVelocity(0)
         player.anims.stop()
+
+        //play idle animation
+        player.anims.play('r_idle', true)
     }
 
     execute(scene, player) {
@@ -125,8 +128,7 @@ class IdleState2 extends State2 {
         const kick = scene.keys.CommaKey
         const special = scene.keys.ColonKey
         const block = scene.keys.PeriodKey
-        //play idle animation
-        player.anims.play('r_idle', true)
+        
 
         //transition to move if movement keys pressed
         if(Phaser.Input.Keyboard.JustDown(left) || Phaser.Input.Keyboard.JustDown(right)){
@@ -623,7 +625,14 @@ class DownKickState2 extends State2 {
                     player.downKickHitbox = player.createHitbox(player.customHitboxes.downkick, scene)
                     player.enableHitbox(player.downKickHitbox, scene)
                 //destroy on 6th frame
-                } else if (frame.index === 13) {
+                } else if (frame.index === 7) {
+                    console.log('downkick hitbox destroyed')
+                    player.disableHitbox(player.downKickHitbox, scene)
+                } else if (frame.index === 10) {
+                    console.log('downkick hitbox created')
+                    player.downKickHitbox = player.createHitbox(player.customHitboxes.downkick, scene)
+                    player.enableHitbox(player.downKickHitbox, scene)
+                } else if (frame.index === 12) {
                     console.log('downkick hitbox destroyed')
                     player.disableHitbox(player.downKickHitbox, scene)
                 }
@@ -667,35 +676,35 @@ class SpecialState2 extends State2 {
         player.setVelocity(0)
         player.anims.stop()
 
+        // Clear existing animation update event listeners
+        player.off('animationupdate')
+
         player.anims.play('r_special')
-        scene.fireball2 = scene.physics.add.sprite(player.x, player.height + 280, 'fireball', 0).setFlipX(true)
-        scene.fireball2.body.setSize(70, 70)
-        scene.fireball2.anims.play('fireball_anim', true)
-        
+
+        //create hitbox on frame 2 of animation
+        player.on('animationupdate', (anim, frame) => {
+            if(anim.key === 'r_special') {
+                //create on 3rd frame
+                if (frame.index === 4) {
+                    scene.fireball2 = scene.physics.add.sprite(player.x, player.height + 280, 'fireball', 0).setFlipX(true)
+                    scene.fireball2.body.setSize(70, 70)
+                    scene.fireball2.anims.play('fireball_anim', true)
+                    scene.fireball2.setVelocityX(-500)
+                }
+            }
+        })
+
         player.once('animationcomplete', () => {    //callback after anim completes
-            if(scene.fireball2){
+            if(scene.fireball2 && scene.fireball2.x < 0){
                 scene.fireball2.destroy()
             }
             scene.p2Cancel = false
             this.stateMachine.transition('idle')
             return
         })
-
-
-        //enable hitbox for special state
     }
 
     execute(scene, player) {
-
-        //if fireball exists
-        if(scene.fireball2){
-            scene.fireball2.x -= 5
-        }
-        
-
-        
-
-        //play special animation transition to idle when finished
 
     }
 
@@ -722,7 +731,6 @@ class DownSpecialState2 extends State2 {
                     console.log('downspecial hitbox created')
                     player.downSpecialHitbox = player.createHitbox(player.customHitboxes.downspecial, scene)
                     player.enableHitbox(player.downSpecialHitbox, scene)
-                    player.downSpecialHitbox.x -= 1
                 //destroy on 6th frame
                 } else if (frame.index === 4) {
                     console.log('downspecial hitbox destroyed')
@@ -742,6 +750,9 @@ class DownSpecialState2 extends State2 {
     }
 
     execute(scene, player) {
+        if(player.downSpecialHitbox){
+            player.downSpecialHitbox.x -=1
+        }
 
     }
 }

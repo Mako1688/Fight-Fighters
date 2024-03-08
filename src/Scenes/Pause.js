@@ -4,8 +4,16 @@ class Pause extends Phaser.Scene {
     }
 
     init(data) {
+        //recieve data from player slect
+        this.p1Rumble = data.p1Rumble
+        this.p1Karate = data.p1Karate
+        this.p2Rumble = data.p2Rumble
+        this.p2Karate = data.p2Karate
+        this.roundCounter = data.roundCounter
+        this.p1Wins = data.p1Wins
+        this.p2Wins = data.p2Wins
         //recieve data about which scene transitioned from
-        this.sceneFrom = data.scene
+        this.sceneKey = data.sceneKey
 
     }
 
@@ -14,7 +22,9 @@ class Pause extends Phaser.Scene {
     }
 
     create() {
+        this.sound.stopAll()
         console.log('started Pause scene')
+        console.log(this.sceneKey)
 
         this.borderPadding = 50
 
@@ -66,23 +76,29 @@ class Pause extends Phaser.Scene {
     }
 
     update() {
-        //check if came from titleScene
-        if(this.sceneFrom == 'titleScene'){
-            if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
+        if(Phaser.Input.Keyboard.JustDown(BackspaceKey)){
+            console.log('backspace key pressed')
+            //check if came from title
+            if(this.sceneKey === 'titleScene'){
                 this.scene.start('titleScene')
                 this.scene.stop('pauseScene')
+            }
+
+            //check if came from play scene
+            if(this.sceneKey === 'playScene'){
+                this.scene.moveDown('pauseScene')
+                this.scene.resume('playScene', {
+                    p1Karate: this.p1Karate,
+                    p1Rumble: this.p1Rumble,
+                    p2Karate: this.p2Karate,
+                    p2Rumble: this.p2Rumble,
+                    roundCounter: this.roundCounter,
+                    p1Wins: this.p1Wins,
+                    p2Wins: this.p2Wins
+                })
                 
             }
         }
-
-        //check if came from playScene
-        if(this.sceneFrom == 'playScene'){
-            if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
-                this.scene.moveUp('playScene')
-                this.scene.resume('playScene')
-            }
-        }
-        
         
 
     }

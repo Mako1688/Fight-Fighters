@@ -14,7 +14,7 @@ class Title extends Phaser.Scene {
     create() {
         //play audio
         this.intro = this.sound.add('intro')
-        this.intro.play()
+        
         //add background image
         this.title = this.add.sprite(game.config.width/2, game.config.height/3, 'title', 0)
         
@@ -42,6 +42,9 @@ class Title extends Phaser.Scene {
     }
 
     update() {
+        if(!(this.intro.isPlaying)){
+            this.intro.play()
+        }
         this.title.anims.play('jiggle', true)
         //press any key to play
         if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
@@ -61,7 +64,7 @@ class Title extends Phaser.Scene {
         //check if backspace pressed
         if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
             this.scene.start('pauseScene', {
-                scene: 'titleScene'
+                sceneKey: 'titleScene'
             })
             
         }
@@ -69,7 +72,7 @@ class Title extends Phaser.Scene {
         //check if backspace pressed
         if (Phaser.Input.Keyboard.JustDown(EnterKey)) {
             this.scene.start('creditsScene', {
-                scene: 'titleScene'
+                sceneKey: 'titleScene'
             })
             
         }

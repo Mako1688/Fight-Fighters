@@ -20,6 +20,24 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        if(!(this.scene.isActive('pauseScene'))) {
+            //launch pause scene
+            this.scene.launch('pauseScene', {
+                p1Karate: this.p1Karate,
+                p1Rumble: this.p1Rumble,
+                p2Karate: this.p2Karate,
+                p2Rumble: this.p2Rumble,
+                roundCounter: this.roundCounter,
+                p1Wins: this.p1Wins,
+                p2Wins: this.p2Wins,
+                sceneKey: 'playScene'
+            })
+            this.scene.moveDown('pauseScene')
+        }
+        
+
+        //play song
+        this.battleSong = this.sound.add('battle song')
 
         //set cancellable normalx
         this.p1Cancel = false
@@ -106,13 +124,24 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+        //check if song is playing
+        if(!(this.battleSong.isPlaying)){
+            this.battleSong.play()
+        }
         
         if(this.roundStarted === true){
             if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
+                this.scene.moveUp('pauseScene')
                 this.scene.pause('playScene', {
-                    sceneFrom: 'playScene'
+                    p1Karate: this.p1Karate,
+                    p1Rumble: this.p1Rumble,
+                    p2Karate: this.p2Karate,
+                    p2Rumble: this.p2Rumble,
+                    roundCounter: this.roundCounter,
+                    p1Wins: this.p1Wins,
+                    p2Wins: this.p2Wins
                 })
-                this.scene.start('pauseScene')
+                
             }
         }
         
@@ -197,7 +226,7 @@ class Play extends Phaser.Scene {
             }
 
             // Example: Decrease target player's health
-            target.decreaseHealth(4) // Adjust the amount as needed
+            target.decreaseHealth(3) // Adjust the amount as needed
 
             // Set the flag to indicate that the hitbox has hit
             hitbox.hasHit = true

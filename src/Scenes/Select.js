@@ -12,7 +12,9 @@ class Select extends Phaser.Scene {
     }
 
     create() {
-        this.sound.play('character_select_song')
+        this.sound.stopAll()
+        this.song = this.sound.add('character_select_song')
+        this.song.play()
         this.Sound1Played = false
         this.Sound2Played = false
         
@@ -278,6 +280,9 @@ class Select extends Phaser.Scene {
                     p2Special.enabled = true
                     p2Block.enabled = true
     
+                    //stop the song
+                    this.song.stop()
+
                     // Start the next scene and pass correct data
                     this.scene.start('playScene', {
                         p1Karate: this.p1Karate,

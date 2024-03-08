@@ -115,6 +115,9 @@ class IdleState1 extends State1 {
         //stop [player]
         player.setVelocity(0)
         player.anims.stop()
+
+        //play idle animation
+        player.anims.play('r_idle', true)
     }
 
     execute(scene, player) {
@@ -126,8 +129,7 @@ class IdleState1 extends State1 {
         const kick = scene.keys.FKey
         const special = scene.keys.TKey
         const block = scene.keys.GKey
-        //play idle animation
-        player.anims.play('r_idle', true)
+        
 
         //transition to move if movement keys pressed
         if(Phaser.Input.Keyboard.JustDown(left) || Phaser.Input.Keyboard.JustDown(right)){
@@ -618,7 +620,14 @@ class DownKickState1 extends State1 {
                     player.downKickHitbox = player.createHitbox(player.customHitboxes.downkick, scene)
                     player.enableHitbox(player.downKickHitbox, scene)
                 //destroy on 6th frame
-                } else if (frame.index === 13) {
+                } else if (frame.index === 7) {
+                    console.log('downkick hitbox destroyed')
+                    player.disableHitbox(player.downKickHitbox, scene)
+                } else if (frame.index === 10) {
+                    console.log('downkick hitbox created')
+                    player.downKickHitbox = player.createHitbox(player.customHitboxes.downkick, scene)
+                    player.enableHitbox(player.downKickHitbox, scene)
+                } else if (frame.index === 12) {
                     console.log('downkick hitbox destroyed')
                     player.disableHitbox(player.downKickHitbox, scene)
                 }
@@ -660,13 +669,26 @@ class SpecialState1 extends State1 {
         player.setVelocity(0)
         player.anims.stop()
 
+        // Clear existing animation update event listeners
+        player.off('animationupdate')
+
         player.anims.play('r_special')
-        scene.fireball = scene.physics.add.sprite(player.x, player.height + 280, 'fireball', 0)
-        scene.fireball.body.setSize(70, 70)
-        scene.fireball.anims.play('fireball_anim', true)
-        
+
+        //create hitbox on frame 2 of animation
+        player.on('animationupdate', (anim, frame) => {
+            if(anim.key === 'r_special') {
+                //create on 3rd frame
+                if (frame.index === 4) {
+                    scene.fireball = scene.physics.add.sprite(player.x, player.height + 280, 'fireball', 0)
+                    scene.fireball.body.setSize(70, 70)
+                    scene.fireball.anims.play('fireball_anim', true)
+                    scene.fireball.setVelocityX(500)
+                }
+            }
+        })
+
         player.once('animationcomplete', () => {    //callback after anim completes
-            if(scene.fireball){
+            if(scene.fireball && scene.fireball.x > game.config.width){
                 scene.fireball.destroy()
             }
             scene.p1Cancel = false
@@ -679,11 +701,6 @@ class SpecialState1 extends State1 {
     }
 
     execute(scene, player) {
-
-        if(scene.fireball){
-            scene.fireball.x += 5
-            
-        }
         
 
         
@@ -715,7 +732,6 @@ class DownSpecialState1 extends State1 {
                     console.log('downspecial hitbox created')
                     player.downSpecialHitbox = player.createHitbox(player.customHitboxes.downspecial, scene)
                     player.enableHitbox(player.downSpecialHitbox, scene)
-                    player.downSpecialHitbox.x += 1
                 //destroy on 6th frame
                 } else if (frame.index === 4) {
                     console.log('downspecial hitbox destroyed')
@@ -735,6 +751,9 @@ class DownSpecialState1 extends State1 {
     }
 
     execute(scene, player) {
+        if(player.downSpecialHitbox){
+            player.downSpecialHitbox.x +=1
+        }
 
     }
 }
