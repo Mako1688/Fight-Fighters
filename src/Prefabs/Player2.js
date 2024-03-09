@@ -49,7 +49,7 @@ class Player2 extends Phaser.Physics.Arcade.Sprite {
 
         // Create a graphics object for the health bar
         this.healthBar = scene.add.graphics()
-        this.healthBar.fillStyle(0x00ff00)
+        this.healthBar.fillStyle(0xFF0000)
         this.healthBar.fillRect(game.config.width / 2 + 60, 0, 100 * this.healthBarScale, 10 * this.healthBarScale)
 
     }
@@ -69,7 +69,7 @@ class Player2 extends Phaser.Physics.Arcade.Sprite {
 
         // Clear and update the health bar width
         this.healthBar.clear()
-        this.healthBar.fillStyle(0x00ff00)
+        this.healthBar.fillStyle(0xFF0000)
         this.healthBar.fillRect(game.config.width / 2 + 60, 0, healthBarWidth, 10 * this.healthBarScale)
     }
 
@@ -768,6 +768,22 @@ class HurtState2 extends State2 {
 
         //play hurt animation
         player.anims.play('r_hurt')
+
+        if(player.punchHitbox){
+            player.disableHitbox(player.punchHitbox, scene)
+        } 
+        if (player.downPunchHitbox) {
+            player.disableHitbox(player.downPunchHitbox, scene)
+        } 
+        if (player.kickHitbox) {
+            player.disableHitbox(player.kickHitbox, scene)
+        } 
+        if(player.downKickHitbox) {
+            player.disableHitbox(player.downKickHitbox, scene)
+        } 
+        if (player.downSpecialHitbox){
+            player.disableHitbox(player.downSpecialHitbox, scene)
+        }
 
         player.once('animationcomplete', () => {    //callback after anim completes
             scene.time.delayedCall(200 , ()=> {

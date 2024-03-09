@@ -26,13 +26,18 @@ class Pause extends Phaser.Scene {
         console.log('started Pause scene')
         console.log(this.sceneKey)
 
+        // Add a generic keyboard listener to check for any key press
+        this.input.keyboard.on('keydown', function (event) {
+            console.log('Key pressed:', event.key);
+        })
+
         this.borderPadding = 50
 
         BackspaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
 
         //add background for pause
         this.healthBarBackground = this.add.graphics()
-        this.healthBarBackground.fillStyle(0x000000, 0.5)
+        this.healthBarBackground.fillStyle(0x000000, 0.75)
         this.healthBarBackground.fillRect(0, 0, game.config.width, game.config.height)
 
         //add any button to start text
@@ -76,17 +81,11 @@ class Pause extends Phaser.Scene {
     }
 
     update() {
-        if(Phaser.Input.Keyboard.JustDown(BackspaceKey)){
-            console.log('backspace key pressed')
-            //check if came from title
-            if(this.sceneKey === 'titleScene'){
+        if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
+            console.log('Backspace key pressed')
+            if (this.sceneKey === 'titleScene') {
                 this.scene.start('titleScene')
-                this.scene.stop('pauseScene')
-            }
-
-            //check if came from play scene
-            if(this.sceneKey === 'playScene'){
-                this.scene.moveDown('pauseScene')
+            } else if (this.sceneKey === 'playScene') {
                 this.scene.resume('playScene', {
                     p1Karate: this.p1Karate,
                     p1Rumble: this.p1Rumble,
@@ -96,8 +95,8 @@ class Pause extends Phaser.Scene {
                     p1Wins: this.p1Wins,
                     p2Wins: this.p2Wins
                 })
-                
             }
+            this.scene.stop('pauseScene')
         }
         
 

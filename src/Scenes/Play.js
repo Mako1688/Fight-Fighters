@@ -20,19 +20,6 @@ class Play extends Phaser.Scene {
     }
 
     create() {
-        //launch pause scene
-        this.scene.launch('pauseScene', {
-            p1Karate: this.p1Karate,
-            p1Rumble: this.p1Rumble,
-            p2Karate: this.p2Karate,
-            p2Rumble: this.p2Rumble,
-            roundCounter: this.roundCounter,
-            p1Wins: this.p1Wins,
-            p2Wins: this.p2Wins,
-            sceneKey: 'playScene'
-        })
-        this.scene.moveDown('pauseScene')
-        
 
         //play song
         this.battleSong = this.sound.add('battle song')
@@ -77,8 +64,6 @@ class Play extends Phaser.Scene {
 
         BackspaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
 
-        
-
         //create backgorund
         this.background = this.add.sprite(0, 0, 'fightBachground').setOrigin(0, 0)
 
@@ -96,7 +81,7 @@ class Play extends Phaser.Scene {
         }
 
         //add clock text
-        this.clockText = this.add.text(game.config.width / 2, 30, '99', menuConfig).setOrigin(0.5)
+        // this.clockText = this.add.text(game.config.width / 2, 30, '99', menuConfig).setOrigin(0.5)
 
         //add pause text
         this.add.text(game.config.width / 2, game.config.height, 'BACKSPACE To PAUSE', menuConfig).setOrigin(0.5, 1)
@@ -118,6 +103,25 @@ class Play extends Phaser.Scene {
         //ready ... fight
         this.roundStart(this.roundCounter)
 
+        // this.input.keyboard.on('keydown_BACKSPACE', function (event) {
+        //     console.log('backspace key pressed')
+        //     if(this.roundStarted == true){
+        //         this.scene.pause('playScene')
+        //         this.scene.launch('pauseScene', {
+        //             p1Karate: this.p1Karate,
+        //             p1Rumble: this.p1Rumble,
+        //             p2Karate: this.p2Karate,
+        //             p2Rumble: this.p2Rumble,
+        //             roundCounter: this.roundCounter,
+        //             p1Wins: this.p1Wins,
+        //             p2Wins: this.p2Wins,
+        //             sceneKey: 'playScene',
+        //         });
+
+        //         this.scene.manager.bringToTop('pauseScene') // Use scene manager to bring the scene up
+        //     }      
+        // }, this)
+
 
     }
 
@@ -127,19 +131,22 @@ class Play extends Phaser.Scene {
             this.battleSong.play()
         }
         
-        if(this.roundStarted === true){
-            if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
-                this.scene.moveUp('pauseScene')
-                this.scene.pause('playScene', {
+        if(Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
+            console.log('backspace key pressed')
+            if(this.roundStarted == true){
+                this.scene.pause('playScene')
+                this.scene.launch('pauseScene', {
                     p1Karate: this.p1Karate,
                     p1Rumble: this.p1Rumble,
                     p2Karate: this.p2Karate,
                     p2Rumble: this.p2Rumble,
                     roundCounter: this.roundCounter,
                     p1Wins: this.p1Wins,
-                    p2Wins: this.p2Wins
-                })
-                
+                    p2Wins: this.p2Wins,
+                    sceneKey: 'playScene',
+                });
+
+                this.scene.manager.bringToTop('pauseScene') // Use scene manager to bring the scene up
             }
         }
         
@@ -213,8 +220,6 @@ class Play extends Phaser.Scene {
             console.log("Valid Collision detected!")
             this.sound.play('hit')
             if(target == this.player1){
-                
-                
                 this.p2Cancel = true
                 this.player1FSM.transition('hurt')
             }
