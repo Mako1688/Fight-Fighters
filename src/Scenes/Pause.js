@@ -33,7 +33,7 @@ class Pause extends Phaser.Scene {
 
         this.borderPadding = 50
 
-        BackspaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
+        
 
         //add background for pause
         this.healthBarBackground = this.add.graphics()
@@ -81,6 +81,8 @@ class Pause extends Phaser.Scene {
     }
 
     update() {
+        BackspaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
+        
         if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
             console.log('Backspace key pressed')
             if (this.sceneKey === 'titleScene') {

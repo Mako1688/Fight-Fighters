@@ -62,7 +62,7 @@ class Play extends Phaser.Scene {
         this.keys.ColonKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SEMICOLON)
         this.keys.PeriodKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.PERIOD)
 
-        BackspaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
+        
 
         //create backgorund
         this.background = this.add.sprite(0, 0, 'fightBachground').setOrigin(0, 0)
@@ -130,6 +130,8 @@ class Play extends Phaser.Scene {
         if(!(this.battleSong.isPlaying)){
             this.battleSong.play()
         }
+
+        BackspaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
         
         if(Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
             console.log('backspace key pressed')
