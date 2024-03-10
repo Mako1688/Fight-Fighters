@@ -14,6 +14,7 @@ class Pause extends Phaser.Scene {
         this.p2Wins = data.p2Wins
         //recieve data about which scene transitioned from
         this.sceneKey = data.sceneKey
+        this.songPlaying = data.songPlaying
 
     }
 
@@ -81,6 +82,12 @@ class Pause extends Phaser.Scene {
     }
 
     update() {
+        //check if song is playing
+        if(this.songPlaying === false){
+            this.battleSong.play()
+            this.songPlaying = true
+        }
+        
         BackspaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
         
         if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
@@ -95,7 +102,8 @@ class Pause extends Phaser.Scene {
                     p2Rumble: this.p2Rumble,
                     roundCounter: this.roundCounter,
                     p1Wins: this.p1Wins,
-                    p2Wins: this.p2Wins
+                    p2Wins: this.p2Wins,
+                    songPlaying: this.songPlaying
                 })
             }
             this.scene.stop('pauseScene')

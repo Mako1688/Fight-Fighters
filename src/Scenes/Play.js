@@ -150,6 +150,7 @@ class Play extends Phaser.Scene {
                     p1Wins: this.p1Wins,
                     p2Wins: this.p2Wins,
                     sceneKey: 'playScene',
+                    songPlaying: this.songPlaying
                 })
 
                 this.scene.manager.bringToTop('pauseScene') // Use scene manager to bring the scene up
