@@ -122,7 +122,6 @@ class Play extends Phaser.Scene {
         //     }      
         // }, this)
 
-
     }
 
     update() {
@@ -174,13 +173,43 @@ class Play extends Phaser.Scene {
         }
 
         if(this.player1.currentHealth == 0){
+
             this.p2Wins += 1
+            // let snapshotKey = 'titlesnapshot';
+
+            // // Create a screenshot
+            // this.textures.once('addtexture', function (key, texture) {
+            //     if (key === snapshotKey) {
+            //         // Add the image to the scene
+            //         this.add.image(this.game.config.width / 2, this.game.config.height / 2, snapshotKey);
+            //     }
+            // }, this);
+
+            // // Add the snapshot image to the textures manager
+            // this.textures.addBase64(snapshotKey, this.game.renderer.snapshotArea(0, 0, this.game.config.width, this.game.config.height))
+
+
             this.gameOver = true
+
         }
 
         if(this.player2.currentHealth == 0){
             this.p1Wins += 1
+            // let snapshotKey = 'titlesnapshot';
+
+            // // Create a screenshot
+            // this.textures.once('addtexture', function (key, texture) {
+            //     if (key === snapshotKey) {
+            //         // Add the image to the scene
+            //         this.add.image(this.game.config.width / 2, this.game.config.height / 2, snapshotKey);
+            //     }
+            // }, this);
+
+            // // Add the snapshot image to the textures manager
+            // this.textures.addBase64(snapshotKey, this.game.renderer.snapshotArea(0, 0, this.game.config.width, this.game.config.height))
+
             this.gameOver = true
+
         }
 
 
@@ -190,17 +219,20 @@ class Play extends Phaser.Scene {
         }
 
         if(this.gameOver == true){
-            this.scene.stop('pauseScene')
-            this.roundCounter+= 1
-            this.scene.restart({
-                p1Karate: this.p1Karate,
-                p1Rumble: this.p1Rumble,
-                p2Karate: this.p2Karate,
-                p2Rumble: this.p2Rumble,
-                roundCounter: this.roundCounter,
-                p1Wins: this.p1Wins,
-                p2Wins: this.p2Wins
+            this.time.delayedCall(3200 , ()=> {
+                this.scene.stop('pauseScene')
+                this.roundCounter+= 1
+                this.scene.restart({
+                    p1Karate: this.p1Karate,
+                    p1Rumble: this.p1Rumble,
+                    p2Karate: this.p2Karate,
+                    p2Rumble: this.p2Rumble,
+                    roundCounter: this.roundCounter,
+                    p1Wins: this.p1Wins,
+                    p2Wins: this.p2Wins
+                })
             })
+            
         }
     }
 
@@ -258,10 +290,6 @@ class Play extends Phaser.Scene {
         //destroy both
         fireball1.destroy()
         fireball2.destroy()
-        
-        
-
-        
     }
 
     

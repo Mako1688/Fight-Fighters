@@ -10,7 +10,7 @@ Approx hours:
 'use strict'
 
 let config = {
-    type: Phaser.AUTO,
+    type: Phaser.WEBGL,
     width: 920,
     height: 640,
     pixelArt: true,

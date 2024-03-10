@@ -148,6 +148,13 @@ class Load extends Phaser.Scene {
             endFrames: 2
         })
 
+        this.load.spritesheet('rumble_win', './assets/SpriteSheets/Rumble_Win.png', {
+            frameWidth: 126,
+            frameHeight: 152,
+            startFrame:  0,
+            endFrames: 7
+        })
+
         
 
         //load Dr Karate Sprite sheets
@@ -350,6 +357,17 @@ class Load extends Phaser.Scene {
             }),
             frameRate: 12,
         })
+
+        this.anims.create({
+            key: 'r_win',
+            frames: this.anims.generateFrameNumbers('rumble_win', { 
+                start: 0, 
+                end: 7, 
+                first: 0
+            }),
+            frameRate: 12,
+            repeat: -1
+        })
         
 
         //create Dr Karate animations
@@ -360,7 +378,7 @@ class Load extends Phaser.Scene {
                 end: 5, 
                 first: 0
             }),
-            frameRate: 12
+            frameRate: 6
         })
 
         this.anims.create({
