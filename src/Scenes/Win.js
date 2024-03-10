@@ -32,6 +32,10 @@ class Win extends Phaser.Scene {
             fixedWidth: 0,
         }
 
+        //define keys
+        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE)
+        EnterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER)
+
         // Create a graphics object for boxes
         this.topBar = this.add.graphics()
         this.topBar.fillStyle(0x000000, 1)
@@ -48,11 +52,44 @@ class Win extends Phaser.Scene {
             this.add.text(game.config.width/2, game.config.height / 5 - 50, 'P2 WINS', menuConfig).setOrigin(0.5, 0.5)
         }
 
-        this.add.text(game.config.width /2, game.config.height - 65, 'WINNERS DON\'T LOSE!', menuConfig).setOrigin(0.5, 0.5)
+        this.winnerText = this.add.text(game.config.width /2, game.config.height - 65, 'WINNERS DON\'T LOSE!', menuConfig).setOrigin(0.5, 0.5)
+
+        this.time.delayedCall(5000, () => {
+            //destroy win text
+            this.winnerText.destroy()
+
+            //restart game text
+            this.add.text(game.config.width /2, game.config.height - 85, 'SPACE Button to PLAY AGAIN', menuConfig).setOrigin(0.5, 0.5)
+
+            //credits text
+            this.add.text(game.config.width /2, game.config.height - 50, 'ENTER Button For CREDITS', menuConfig).setOrigin(0.5, 0.5)
+            
+        }, null, this)
         
     }
 
     update() {
+        //check if backspace pressed
+        if (Phaser.Input.Keyboard.JustDown(EnterKey)) {
+            this.scene.start('creditsScene', {
+                sceneKey: 'titleScene'
+            })
+            
+        }
+
+        //press any key to play
+        if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
+            this.sound.play('select')
+            this.input.keyboard.enabled = false
+            this.explosion = this.add.sprite(0, 0, 'explosion', 32).setScale(5, 6.2).setOrigin(0, 0)
+            //play shitty explosion animation
+            this.explosion.anims.play('explode', true)
+            this.explosion.on('animationcomplete', () => {    //callback after anim completes
+                this.input.keyboard.enabled = true
+                this.scene.start('selectScene')
+            })
+            
+        }
 
     }
 }

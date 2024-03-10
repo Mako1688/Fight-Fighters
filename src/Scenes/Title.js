@@ -12,6 +12,8 @@ class Title extends Phaser.Scene {
     }
 
     create() {
+        //stop all sound
+        this.sound.stopAll()
         //play audio
         this.intro = this.sound.add('intro')
         

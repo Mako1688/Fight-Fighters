@@ -31,7 +31,7 @@ class Credits extends Phaser.Scene {
             fixedWidth: 0,
         }
         //show players text and pause text
-        this.add.text(game.config.width / 2, game.config.height / 2, 'Credits:\nCoding: Marco Ogaz-Vega\n\nSprites: Marco Ogaz-Vega,\nLois <3,\nPaul Robertson\n(Gravity Falls Sprite Animator)\n\nAudio: Marco Ogaz-Vega,\nBrad Breeck\n(Gravity Falls Musician)\n\nStateMachine: Prof.Nathan Altice\n\nENTER to Return', menuConfig).setOrigin(0.5, 0.5)
+        this.add.text(game.config.width / 2, game.config.height / 2, 'Credits:\nCoding: Marco Ogaz-Vega\n\nSprites: Marco Ogaz-Vega,\nLois <3,\nPaul Robertson\n(Gravity Falls Sprite Animator)\n\nAudio: Marco Ogaz-Vega,\nBrad Breeck\n(Gravity Falls Musician)\n\nStateMachine: Prof.Nathan Altice\n\nENTER to RETURN to TITLE', menuConfig).setOrigin(0.5, 0.5)
         
         
     }

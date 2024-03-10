@@ -11,7 +11,8 @@ class Play extends Phaser.Scene {
         this.p2Karate = data.p2Karate
         this.roundCounter = data.roundCounter
         this.p1Wins = data.p1Wins
-        this.p2Wins = data.p2Wins
+        this.p2Wins = data.p2Wins,
+        this.songPlaying = data.songPlaying
 
     }
 
@@ -30,6 +31,8 @@ class Play extends Phaser.Scene {
         //disable keys
         this.input.keyboard.enabled = false
 
+        console.log(this.p1Wins, this.p2Wins)
+
         if(this.p1Wins == 2 || this.p2Wins == 2) {
             this.scene.stop('pauseScene')
             this.scene.start('winScene', {
@@ -38,7 +41,6 @@ class Play extends Phaser.Scene {
             })
         }
         
-
         this.gameOver = false
         this.roundStarted = false
         // setup keyboard input
@@ -126,12 +128,15 @@ class Play extends Phaser.Scene {
 
     update() {
         //check if song is playing
-        if(!(this.battleSong.isPlaying)){
+        if(this.songPlaying === false){
             this.battleSong.play()
+            this.songPlaying = true
         }
 
+        //define backspace key
         BackspaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
         
+        //check for backspace key
         if(Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
             console.log('backspace key pressed')
             if(this.roundStarted == true){
@@ -145,7 +150,7 @@ class Play extends Phaser.Scene {
                     p1Wins: this.p1Wins,
                     p2Wins: this.p2Wins,
                     sceneKey: 'playScene',
-                });
+                })
 
                 this.scene.manager.bringToTop('pauseScene') // Use scene manager to bring the scene up
             }
@@ -190,7 +195,6 @@ class Play extends Phaser.Scene {
 
 
             this.gameOver = true
-
         }
 
         if(this.player2.currentHealth == 0){
@@ -209,7 +213,6 @@ class Play extends Phaser.Scene {
             // this.textures.addBase64(snapshotKey, this.game.renderer.snapshotArea(0, 0, this.game.config.width, this.game.config.height))
 
             this.gameOver = true
-
         }
 
 
@@ -219,18 +222,17 @@ class Play extends Phaser.Scene {
         }
 
         if(this.gameOver == true){
-            this.time.delayedCall(3200 , ()=> {
-                this.scene.stop('pauseScene')
-                this.roundCounter+= 1
-                this.scene.restart({
-                    p1Karate: this.p1Karate,
-                    p1Rumble: this.p1Rumble,
-                    p2Karate: this.p2Karate,
-                    p2Rumble: this.p2Rumble,
-                    roundCounter: this.roundCounter,
-                    p1Wins: this.p1Wins,
-                    p2Wins: this.p2Wins
-                })
+            this.scene.stop('pauseScene')
+            this.roundCounter+= 1
+            this.scene.restart({
+                p1Karate: this.p1Karate,
+                p1Rumble: this.p1Rumble,
+                p2Karate: this.p2Karate,
+                p2Rumble: this.p2Rumble,
+                roundCounter: this.roundCounter,
+                p1Wins: this.p1Wins,
+                p2Wins: this.p2Wins,
+                songPlaying: this.songPlaying
             })
             
         }
