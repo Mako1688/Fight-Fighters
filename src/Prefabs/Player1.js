@@ -9,7 +9,7 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
         // Set the initial size of the physics body
         this.body.setSize(60, 120)
         this.setOrigin(0.5, 1)
-        this.body.immovable = true
+        // this.body.immovable = true
 
         // Define custom hitbox properties for different animations
         this.customHitboxes = {
@@ -155,6 +155,7 @@ class IdleState1 extends State1 {
     }
 
     execute(scene, player) {
+        player.setVelocity(0)
         // use destructuring to make a local copy of the keyboard object
         const left = scene.keys.AKey
         const right = scene.keys.DKey
@@ -321,6 +322,7 @@ class CrouchState1 extends State1 {
     }
 
     execute(scene, player) {
+        player.setVelocity(0)
         // use destructuring to make a local copy of the keyboard object
         const left = scene.keys.AKey
         const right = scene.keys.DKey
@@ -398,6 +400,7 @@ class BlockState1 extends State1 {
     }
 
     execute(scene, player) {
+        player.setVelocity(0)
         // Use destructuring to make a local copy of the keyboard object
         const left = scene.keys.AKey
         const right = scene.keys.DKey
@@ -515,6 +518,7 @@ class PunchState1 extends State1 {
     }
 
     execute(scene, player) {
+        player.setVelocity(0)
         // use destructuring to make a local copy of the keyboard object
         const left = scene.keys.AKey
         const right = scene.keys.DKey
@@ -597,6 +601,7 @@ class DownPunchState1 extends State1 {
     }
 
     execute(scene, player) {
+        player.setVelocity(0)
         // use destructuring to make a local copy of the keyboard object
         const left = scene.keys.AKey
         const right = scene.keys.DKey
@@ -658,6 +663,7 @@ class KickState1 extends State1 {
     }
 
     execute(scene, player) {
+        player.setVelocity(0)
         // use destructuring to make a local copy of the keyboard object
         const left = scene.keys.AKey
         const right = scene.keys.DKey
@@ -740,6 +746,7 @@ class DownKickState1 extends State1 {
     }
 
     execute(scene, player) {
+        player.setVelocity(0)
         // use destructuring to make a local copy of the keyboard object
         const left = scene.keys.AKey
         const right = scene.keys.DKey
@@ -801,7 +808,7 @@ class SpecialState1 extends State1 {
     }
 
     execute(scene, player) {
-        
+        player.setVelocity(0)
 
         
 
@@ -904,6 +911,10 @@ class HurtState1 extends State1 {
         })
 
         //wait until hurt animation is complete before returning to idle
+    }
+
+    execute(scene, player){
+        player.setVelocity(0)
     }
 }
 

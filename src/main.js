@@ -2,9 +2,7 @@
 // Name: Marco Ogaz-Vega
 // Date: 2/20/24
 /*
-Approx hours:
-
-
+Approx hours: 60 or more I lost count
 */
 
 'use strict'

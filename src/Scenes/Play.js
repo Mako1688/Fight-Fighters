@@ -103,7 +103,15 @@ class Play extends Phaser.Scene {
         this.p1activeHitboxes = []
         this.p2activeHitboxes = []
 
-        this.physics.add.collider(this.player1, this.player2)
+        // Enable physics for player1 and player2
+        this.physics.world.enable([this.player1, this.player2])
+
+        this.player1.setDepth(1)
+        this.player2.setDepth(1)
+
+        console.log('Before overlap check')
+        this.physics.world.overlap(this.player1, this.player2, this.handlePlayerCollision, null, this)
+        console.log('After overlap check')
 
         this.p1Hittable = true
         this.p2Hittable = true
@@ -270,6 +278,10 @@ class Play extends Phaser.Scene {
             })
             
         }
+    }
+
+    handlePlayerCollision(player1, player2) {
+        console.log('Player collision detected!')
     }
 
     handleHitboxCollision(hitbox, target) {
