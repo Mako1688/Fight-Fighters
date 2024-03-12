@@ -8,11 +8,12 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
         this.body.setCollideWorldBounds(true)
         // Set the initial size of the physics body
         this.body.setSize(60, 120)
+        this.setOrigin(0.5, 1)
         this.body.immovable = true
 
         // Define custom hitbox properties for different animations
         this.customHitboxes = {
-            punch: { width: 200, height: 120, offsetX: 45, offsetY: -120},
+            punch: { width: 200, height: 30, offsetX: 45, offsetY: -140},
             downpunch: { width: 180, height: 120, offsetX: 40, offsetY: -120 },
             kick: { width: this.body.width * 2, height: this.body.height * 2, offsetX: 50, offsetY: -100 },
             downkick: { width: 200, height: 120, offsetX: 60, offsetY: -120 },
@@ -47,7 +48,7 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
 
         // Create a graphics object for the health bar
         this.healthBar = scene.add.graphics()
-        this.healthBar.fillStyle(0xFF0000)
+        this.healthBar.fillStyle(0x00FF00)
         this.healthBar.fillRect(0, 0, 100 * this.healthBarScale, 10 * this.healthBarScale)
 
         //collision with other player
@@ -68,7 +69,14 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
 
         // Clear and update the health bar width
         this.healthBar.clear()
-        this.healthBar.fillStyle(0xFF0000)
+        if(healthPercentage > 0.5){
+            this.healthBar.fillStyle(0x00FF00)
+        }else if(healthPercentage > 0.25){
+            this.healthBar.fillStyle(0xFFFF00)
+        }else {
+            this.healthBar.fillStyle(0xFF0000)
+        }
+        
         this.healthBar.fillRect(100 * this.healthBarScale - healthBarWidth, 0, healthBarWidth, 10 * this.healthBarScale)
     }
 
@@ -120,8 +128,28 @@ class IdleState1 extends State1 {
         player.setVelocity(0)
         player.anims.stop()
 
+        player.body.setSize(60, 120)
+        player.setOrigin(0.5, 1)
+
         //play idle animation
         player.anims.play('r_idle', true)
+
+        //delete hitboxes
+        if(player.punchHitbox){
+            player.disableHitbox(player.punchHitbox, scene)
+        } 
+        if (player.downPunchHitbox) {
+            player.disableHitbox(player.downPunchHitbox, scene)
+        } 
+        if (player.kickHitbox) {
+            player.disableHitbox(player.kickHitbox, scene)
+        } 
+        if(player.downKickHitbox) {
+            player.disableHitbox(player.downKickHitbox, scene)
+        } 
+        if (player.downSpecialHitbox){
+            player.disableHitbox(player.downSpecialHitbox, scene)
+        }
     }
 
     execute(scene, player) {
@@ -178,7 +206,34 @@ class MoveState1 extends State1 {
     enter(scene, player) {
         console.log("p1 move")
         player.anims.stop()
+
+        player.body.setSize(60, 120)
+        player.setOrigin(0.5, 1)
         
+        // use destructuring to make a local copy of the keyboard object
+        const left = scene.keys.AKey
+        const right = scene.keys.DKey
+        const down = scene.keys.SKey
+        const punch = scene.keys.RKey
+        const kick = scene.keys.FKey
+        const special = scene.keys.TKey
+        const block = scene.keys.GKey
+        
+        // handle movement
+        if(left.isDown){
+            //play walk animation backwards
+            player.anims.playReverse('r_walk', true)
+            //set velocity
+            player.setVelocityX(-275)
+
+            
+        }else if(right.isDown) {
+            //play walk animation forwards
+            player.anims.play('r_walk', true)
+            //set velocity
+            player.setVelocityX(275)
+
+        }
         
     }
     execute(scene, player) {
@@ -256,6 +311,10 @@ class CrouchState1 extends State1 {
         //play crouch animation
         player.anims.play('r_crouch')
 
+        player.body.setSize(60, 60).setOffset(0, 60)
+        
+
+
 
     }
 
@@ -274,36 +333,42 @@ class CrouchState1 extends State1 {
 
         //transition to move if movement keys pressed
         if(Phaser.Input.Keyboard.JustDown(left) || Phaser.Input.Keyboard.JustDown(right)){
+            player.body.setSize(60, 120).setOffset(0)
             this.stateMachine.transition('move')
             return
         }
 
         //transition to block if block key is pressed
         if(Phaser.Input.Keyboard.JustDown(block)) {
+            player.body.setSize(60, 120).setOffset(0)
             this.stateMachine.transition('block')
             return
         }
 
         //transition to punch if punch key pressed
         if(Phaser.Input.Keyboard.JustDown(punch)){
+            player.body.setSize(60, 120).setOffset(0)
             this.stateMachine.transition('downPunch')
             return
         }
 
         //transition to kick if kick key pressed
         if(Phaser.Input.Keyboard.JustDown(kick)){
+            player.body.setSize(60, 120).setOffset(0)
             this.stateMachine.transition('downKick')
             return
         }
 
         //transition to special if special key pressed
         if(Phaser.Input.Keyboard.JustDown(special)){
+            player.body.setSize(60, 120).setOffset(0)
             this.stateMachine.transition('downSpecial')
             return
         }
 
         // transition to idle if release crouch key
         if(Phaser.Input.Keyboard.JustUp(down)) {
+            player.body.setSize(60, 120).setOffset(0)
             this.stateMachine.transition('idle')
             return
         }
@@ -317,11 +382,17 @@ class BlockState1 extends State1 {
         player.setVelocity(0)
         player.anims.stop()
 
+        player.body.setSize(60, 120)
+        player.setOrigin(0.5, 1)
+
         // Play block animation
         player.anims.play('r_block')
 
         // Disable player's body collisions
-        player.body.enable = false
+        scene.p1Hittable = false
+
+        //record the start time when entering the scene
+        this.blockStartTime = scene.time.now
     }
 
     execute(scene, player) {
@@ -339,36 +410,44 @@ class BlockState1 extends State1 {
 
         // Transition to idle if release block key
         if (Phaser.Input.Keyboard.JustUp(block)) {
-            player.body.enable = true
+            scene.p1Hittable = true
             this.stateMachine.transition('idle')
             return
         }
 
         // Transition to move if movement keys pressed
         if (Phaser.Input.Keyboard.JustDown(left) || Phaser.Input.Keyboard.JustDown(right)) {
-            player.body.enable = true
+            scene.p1Hittable = true
             this.stateMachine.transition('move')
             return
         }
 
         // Transition to punch if punch key pressed
         if (Phaser.Input.Keyboard.JustDown(punch)) {
-            player.body.enable = true
+            scene.p1Hittable = true
             this.stateMachine.transition('punch')
             return
         }
 
         // Transition to kick if kick key pressed
         if (Phaser.Input.Keyboard.JustDown(kick)) {
-            player.body.enable = true
+            scene.p1Hittable = true
             this.stateMachine.transition('kick')
             return
         }
 
         // Transition to special if special key pressed
         if (Phaser.Input.Keyboard.JustDown(special)) {
-            player.body.enable = true
+            scene.p1Hittable = true
             this.stateMachine.transition('special')
+            return
+        }
+
+        //block timer to not allow blocking forever
+        if((scene.time.now - this.blockStartTime) >= 4000) {
+            scene.p1Hittable = true
+            player.decreaseHealth(5)
+            this.stateMachine.transition('hurt')
             return
         }
     }
@@ -380,6 +459,9 @@ class PunchState1 extends State1 {
         console.log("p1 punch")
         player.setVelocity(0)
         player.anims.stop()
+
+        player.body.setSize(60, 120)
+        player.setOrigin(0.5, 1)
 
         // Clear existing animation update event listeners
         player.off('animationupdate')
@@ -474,6 +556,9 @@ class DownPunchState1 extends State1 {
         player.setVelocity(0)
         player.anims.stop()
 
+        player.body.setSize(60, 120)
+        player.setOrigin(0.5, 1)
+
         // Clear existing animation update event listeners
         player.off('animationupdate')
 
@@ -536,6 +621,9 @@ class KickState1 extends State1 {
         console.log("p1 kick")
         player.setVelocity(0)
         player.anims.stop()
+
+        player.body.setSize(60, 120)
+        player.setOrigin(0.5, 1)
 
         // Clear existing animation update event listeners
         player.off('animationupdate')
@@ -609,6 +697,9 @@ class DownKickState1 extends State1 {
         player.setVelocity(0)
         player.anims.stop()
 
+        player.body.setSize(60, 120)
+        player.setOrigin(0.5, 1)
+
         // Clear existing animation update event listeners
         player.off('animationupdate')
 
@@ -673,6 +764,9 @@ class SpecialState1 extends State1 {
         player.setVelocity(0)
         player.anims.stop()
 
+        player.body.setSize(60, 120)
+        player.setOrigin(0.5, 1)
+
         // Clear existing animation update event listeners
         player.off('animationupdate')
 
@@ -684,7 +778,7 @@ class SpecialState1 extends State1 {
                 //create on 3rd frame
                 if (frame.index === 4) {
                     scene.fireball = scene.physics.add.sprite(player.x, player.height + 280, 'fireball', 0)
-                    scene.fireball.body.setSize(70, 70)
+                    scene.fireball.body.setSize(70, 10)
                     scene.fireball.anims.play('fireball_anim', true)
                     scene.fireball.setVelocityX(500)
                 }
@@ -722,22 +816,30 @@ class DownSpecialState1 extends State1 {
         player.setVelocityX(100)
         player.anims.stop()
 
+        player.body.setSize(60, 120)
+        player.setOrigin(0.5, 1)
+
         // Clear existing animation update event listeners
         player.off('animationupdate')
 
         //play animation
         player.anims.play('r_down_special')
 
+        // Disable player's body collisions
+        scene.p1Hittable = false
+
         //create hitbox on frame 2 of animation
         player.on('animationupdate', (anim, frame) => {
             if(anim.key === 'r_down_special') {
                 //create on 3rd frame
                 if (frame.index === 2) {
+
                     console.log('downspecial hitbox created')
                     player.downSpecialHitbox = player.createHitbox(player.customHitboxes.downspecial, scene)
                     player.enableHitbox(player.downSpecialHitbox, scene)
                 //destroy on 6th frame
                 } else if (frame.index === 4) {
+                    
                     console.log('downspecial hitbox destroyed')
                     player.disableHitbox(player.downSpecialHitbox, scene)
                 }
@@ -746,7 +848,7 @@ class DownSpecialState1 extends State1 {
 
         player.once('animationcomplete', () => {    //callback after anim completes
             player.setVelocityX(0)
-            
+            player.p1Hittable = true
             this.stateMachine.transition('idle')
             return
         })
@@ -769,7 +871,9 @@ class HurtState1 extends State1 {
         console.log("p1 hurt")
         player.setVelocity(0)
         player.anims.stop()
-        //move slightly away from other player
+
+        player.body.setSize(60, 120)
+        player.setOrigin(0.5, 1)
 
         //play hurt animation
         player.anims.play('r_hurt')
@@ -793,10 +897,8 @@ class HurtState1 extends State1 {
         
 
         player.once('animationcomplete', () => {    //callback after anim completes
-            scene.time.delayedCall(200 , ()=> {
-                this.stateMachine.transition('idle')
-                return
-            })
+            this.stateMachine.transition('idle')
+            return
         })
 
         //wait until hurt animation is complete before returning to idle

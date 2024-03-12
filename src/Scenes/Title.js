@@ -65,6 +65,7 @@ class Title extends Phaser.Scene {
 
         //check if backspace pressed
         if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
+            this.sound.play('select')
             this.scene.start('pauseScene', {
                 sceneKey: 'titleScene'
             })
@@ -73,6 +74,7 @@ class Title extends Phaser.Scene {
 
         //check if backspace pressed
         if (Phaser.Input.Keyboard.JustDown(EnterKey)) {
+            this.sound.play('select')
             this.scene.start('creditsScene', {
                 sceneKey: 'titleScene'
             })

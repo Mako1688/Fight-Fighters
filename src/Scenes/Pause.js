@@ -23,7 +23,7 @@ class Pause extends Phaser.Scene {
     }
 
     create() {
-        this.sound.stopAll()
+        // this.sound.stopAll()
         console.log('started Pause scene')
         console.log(this.sceneKey)
 
@@ -82,15 +82,16 @@ class Pause extends Phaser.Scene {
     }
 
     update() {
-        //check if song is playing
-        if(this.songPlaying === false){
-            this.battleSong.play()
-            this.songPlaying = true
-        }
+        // //check if song is playing
+        // if(this.songPlaying === false){
+        //     this.battleSong.play()
+        //     this.songPlaying = true
+        // }
         
         BackspaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
         
         if (Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
+            this.sound.play('select')
             console.log('Backspace key pressed')
             if (this.sceneKey === 'titleScene') {
                 this.scene.start('titleScene')

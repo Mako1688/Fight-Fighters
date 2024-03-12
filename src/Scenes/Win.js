@@ -71,6 +71,7 @@ class Win extends Phaser.Scene {
     update() {
         //check if backspace pressed
         if (Phaser.Input.Keyboard.JustDown(EnterKey)) {
+            this.scene.stop('audioScene')
             this.scene.start('creditsScene', {
                 sceneKey: 'titleScene'
             })
@@ -81,6 +82,7 @@ class Win extends Phaser.Scene {
         if(Phaser.Input.Keyboard.JustDown(keySPACE)) {
             this.sound.play('select')
             this.input.keyboard.enabled = false
+            this.scene.stop('audioScene')
             this.explosion = this.add.sprite(0, 0, 'explosion', 32).setScale(5, 6.2).setOrigin(0, 0)
             //play shitty explosion animation
             this.explosion.anims.play('explode', true)

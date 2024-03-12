@@ -29,7 +29,7 @@ let config = {
             }
         }
     },
-    scene: [Load, Title, Select, Play, Pause, Win, Credits]
+    scene: [Load, Title, Select, AudioScene, Play, Pause, Win, Credits]
 }
 
 let game = new Phaser.Game(config)

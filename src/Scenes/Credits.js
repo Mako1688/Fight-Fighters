@@ -40,6 +40,7 @@ class Credits extends Phaser.Scene {
         //check if backspace pressed
         //check if came from titleScene
         if (Phaser.Input.Keyboard.JustDown(EnterKey)) {
+            this.sound.play('select')
             if(this.sceneKey === 'titleScene'){
                 this.scene.start('titleScene')
                 this.scene.stop('creditsScene')

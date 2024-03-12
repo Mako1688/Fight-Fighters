@@ -22,8 +22,11 @@ class Play extends Phaser.Scene {
 
     create() {
 
-        //play song
-        this.battleSong = this.sound.add('battle song')
+        // //play song
+        // this.battleSong = this.sound.add('battle song')
+
+        // Start the audio scene
+        this.scene.launch('audioScene')
 
         //set cancellable normalx
         this.p1Cancel = false
@@ -101,6 +104,9 @@ class Play extends Phaser.Scene {
         this.p2activeHitboxes = []
 
         this.physics.add.collider(this.player1, this.player2)
+
+        this.p1Hittable = true
+        this.p2Hittable = true
         
 
         //ready ... fight
@@ -125,20 +131,44 @@ class Play extends Phaser.Scene {
         //     }      
         // }, this)
 
+        menuConfig.fontSize = '18px'
+
+        //add round counters
+        this.add.text(game.config.width / 2 - 80, 60, ' ', menuConfig).setOrigin(0.5)
+        this.add.text(game.config.width / 2 - 120, 60, ' ', menuConfig).setOrigin(0.5)
+        this.add.text(game.config.width / 2 + 80, 60, ' ', menuConfig).setOrigin(0.5)
+        this.add.text(game.config.width / 2 + 120, 60, ' ', menuConfig).setOrigin(0.5)
+        if(this.p1Wins == 1) {
+            this.add.text(game.config.width / 2 - 80, 60, 'V', menuConfig).setOrigin(0.5)
+        }else if(this.p1Wins == 2) {
+            this.add.text(game.config.width / 2 - 80, 60, 'V', menuConfig).setOrigin(0.5)
+            this.add.text(game.config.width / 2 - 120, 60, 'V', menuConfig).setOrigin(0.5)
+        }
+
+        if(this.p2Wins == 1) {
+            this.add.text(game.config.width / 2 + 80, 60, 'V', menuConfig).setOrigin(0.5)
+        }else if(this.p2Wins == 2) {
+            this.add.text(game.config.width / 2 + 80, 60, 'V', menuConfig).setOrigin(0.5)
+            this.add.text(game.config.width / 2 + 120, 60, 'V', menuConfig).setOrigin(0.5)
+        }
+
     }
 
     update() {
-        //check if song is playing
-        if(this.songPlaying === false){
-            this.battleSong.play()
-            this.songPlaying = true
-        }
+        // //check if song is playing
+        // if(this.songPlaying === false){
+        //     this.battleSong.play()
+        //     this.songPlaying = true
+        // }
+
+        
 
         //define backspace key
         BackspaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.BACKSPACE)
         
         //check for backspace key
         if(Phaser.Input.Keyboard.JustDown(BackspaceKey)) {
+            this.sound.play('select')
             console.log('backspace key pressed')
             if(this.roundStarted == true){
                 this.scene.pause('playScene')
@@ -255,27 +285,47 @@ class Play extends Phaser.Scene {
         // Check if the hitbox has already registered a hit
         if (!hitbox.hasHit) {
             //hit particles
-            this.deathEmitter.emitParticleAt((hitbox.x + target.x) / 2, hitbox.y)
+            
             // Perform your collision logic here
             console.log("Valid Collision detected!")
             this.sound.play('hit')
-            if(target == this.player1){
+            if(target == this.player1 && this.p1Hittable === true){
                 this.p2Cancel = true
                 this.player1FSM.transition('hurt')
+                this.deathEmitter.emitParticleAt((hitbox.x + target.x) / 2, hitbox.y)
+                target.decreaseHealth(3) // Adjust the amount as needed
+            } else if(target == this.player1 && this.p1Hittable === false) {
+                this.deathEmitter = this.add.particles(0, 0, 'particle', {
+                    speed: 500,
+                    scale: { start: 4, end: 0.1 },
+                    alpha: { start: 1, end: 0 },
+                    quantity: 50,
+                    lifespan: 200,
+                    frequency: -1,
+                    tint: 0x0000FF
+                })
+                this.deathEmitter.emitParticleAt((hitbox.x + target.x) / 2, hitbox.y)
             }
 
-            if(target == this.player2){
+            if(target == this.player2 && this.p2Hittable === true){
                 this.p1Cancel = true
                 this.player2FSM.transition('hurt')
+                this.deathEmitter.emitParticleAt((hitbox.x + target.x) / 2, hitbox.y)
+                target.decreaseHealth(3) // Adjust the amount as needed
+            }if(target == this.player2 && this.p2Hittable === false) {
+                this.deathEmitter = this.add.particles(0, 0, 'particle', {
+                    speed: 500,
+                    scale: { start: 4, end: 0.1 },
+                    alpha: { start: 1, end: 0 },
+                    quantity: 50,
+                    lifespan: 200,
+                    frequency: -1,
+                    tint: 0x0000FF
+                })
+                this.deathEmitter.emitParticleAt((hitbox.x + target.x) / 2, hitbox.y)
             }
-
-            // Example: Decrease target player's health
-            target.decreaseHealth(3) // Adjust the amount as needed
-
             // Set the flag to indicate that the hitbox has hit
             hitbox.hasHit = true
-
-            // Additional logic based on your requirements
         }
     }
 
