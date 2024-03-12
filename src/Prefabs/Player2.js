@@ -3,6 +3,7 @@ class Player2 extends Phaser.Physics.Arcade.Sprite {
         super(scene, x, y, texture, frame) // call Sprite parent class
         scene.add.existing(this)           // add Hero to existing scene
         scene.physics.add.existing(this)   // add physics body to scene
+        scene.physics.world.enable(this)
 
         this.body.setCollideWorldBounds(true)
         // Set the initial size of the physics body
@@ -51,6 +52,9 @@ class Player2 extends Phaser.Physics.Arcade.Sprite {
         this.healthBar = scene.add.graphics()
         this.healthBar.fillStyle(0xFF0000)
         this.healthBar.fillRect(game.config.width / 2 + 60, 0, 100 * this.healthBarScale, 10 * this.healthBarScale)
+
+        //collision with other player
+        scene.physics.add.collider(this, scene.player1)
 
     }
 

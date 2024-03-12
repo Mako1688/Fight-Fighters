@@ -101,6 +101,7 @@ class Play extends Phaser.Scene {
         this.p2activeHitboxes = []
 
         this.physics.add.collider(this.player1, this.player2)
+        
 
         //ready ... fight
         this.roundStart(this.roundCounter)
@@ -160,6 +161,8 @@ class Play extends Phaser.Scene {
 
         this.player1FSM.step()
         this.player2FSM.step()
+
+        
         
         // Check for hitbox collisions with the target player
         this.physics.world.collide(this.p1activeHitboxes, this.player2, this.handleHitboxCollision, null, this)
