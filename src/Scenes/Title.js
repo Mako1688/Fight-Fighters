@@ -55,6 +55,10 @@ class Title extends Phaser.Scene {
             this.explosion = this.add.sprite(0, 0, 'explosion', 32).setScale(5, 6.2).setOrigin(0, 0)
             //play shitty explosion animation
             this.explosion.anims.play('explode', true)
+            this.time.delayedCall(800 , ()=> {
+                this.sound.play('boom')
+            })
+            
             this.explosion.on('animationcomplete', () => {    //callback after anim completes
                 this.intro.stop()
                 this.input.keyboard.enabled = true

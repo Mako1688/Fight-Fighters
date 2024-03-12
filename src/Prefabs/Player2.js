@@ -132,6 +132,8 @@ class IdleState2 extends State2 {
         player.body.setSize(60, 120).setOffset(30, 0)
         player.setOrigin(0.5, 1)
 
+        scene.p2Hittable = true
+
         //delete hitboxes if applicable
         if(player.punchHitbox){
             player.disableHitbox(player.punchHitbox, scene)
@@ -380,7 +382,7 @@ class BlockState2 extends State2 {
         player.setVelocity(0)
         player.anims.stop()
 
-        player.body.setSize(60, 120).setOffset(30, 0)
+        player.body.setSize(60, 120).setOffset(0, 0)
         player.setOrigin(0.5, 1)
 
         //play crouch animation

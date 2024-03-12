@@ -134,6 +134,8 @@ class IdleState1 extends State1 {
         //play idle animation
         player.anims.play('r_idle', true)
 
+        scene.p1Hittable = true
+
         //delete hitboxes
         if(player.punchHitbox){
             player.disableHitbox(player.punchHitbox, scene)

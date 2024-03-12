@@ -34,6 +34,7 @@ class Load extends Phaser.Scene {
         this.load.audio('hit', './assets/Sounds/Hit.wav')
         this.load.audio('switch', './assets/Sounds/Switch.wav')
         this.load.audio('battle song', './assets/Sounds/Battle Theme.mp3')
+        this.load.audio('boom', './assets/Sounds/WTF BOOM sound effect.mp3')
 
         //load spritesheets
         this.load.spritesheet('explosion', './assets/SpriteSheets/Fist Explosion.png', {
