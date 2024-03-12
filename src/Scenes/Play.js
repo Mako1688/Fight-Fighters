@@ -169,6 +169,25 @@ class Play extends Phaser.Scene {
         //     this.songPlaying = true
         // }
 
+        const minDistanceThreshold = 100; // Adjust the threshold value as needed
+
+        // Check the distance between players
+        const distanceX = Math.abs(this.player1.x - this.player2.x);
+
+        if (distanceX < minDistanceThreshold) {
+            // Players are too close, adjust their positions to maintain separation
+            const offsetX = minDistanceThreshold - distanceX;
+
+            if (this.player1.x < this.player2.x) {
+                this.player1.x -= offsetX / 2;
+                this.player2.x += offsetX / 2;
+            } else {
+                this.player1.x += offsetX / 2;
+                this.player2.x -= offsetX / 2;
+            }
+
+        }
+
         
 
         //define backspace key
@@ -282,6 +301,8 @@ class Play extends Phaser.Scene {
 
     handlePlayerCollision(player1, player2) {
         console.log('Player collision detected!')
+        player1.x -= 10
+        player2.x += 10
     }
 
     handleHitboxCollision(hitbox, target) {

@@ -108,6 +108,7 @@ class Player2 extends Phaser.Physics.Arcade.Sprite {
         if (index !== -1) {
             scene.p2activeHitboxes.splice(index, 1)
         }
+        
         if(hitbox.body){
             hitbox.body.destroy()
         }

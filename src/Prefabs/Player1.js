@@ -113,9 +113,6 @@ class Player1 extends Phaser.Physics.Arcade.Sprite {
     }
     }
 
-    
-
-    
 }
 
 
