@@ -119,26 +119,6 @@ class Play extends Phaser.Scene {
 
         //ready ... fight
         this.roundStart(this.roundCounter)
-
-        // this.input.keyboard.on('keydown_BACKSPACE', function (event) {
-        //     console.log('backspace key pressed')
-        //     if(this.roundStarted == true){
-        //         this.scene.pause('playScene')
-        //         this.scene.launch('pauseScene', {
-        //             p1Karate: this.p1Karate,
-        //             p1Rumble: this.p1Rumble,
-        //             p2Karate: this.p2Karate,
-        //             p2Rumble: this.p2Rumble,
-        //             roundCounter: this.roundCounter,
-        //             p1Wins: this.p1Wins,
-        //             p2Wins: this.p2Wins,
-        //             sceneKey: 'playScene',
-        //         });
-
-        //         this.scene.manager.bringToTop('pauseScene') // Use scene manager to bring the scene up
-        //     }      
-        // }, this)
-
         menuConfig.fontSize = '18px'
 
         //add round counters
@@ -163,27 +143,21 @@ class Play extends Phaser.Scene {
     }
 
     update() {
-        // //check if song is playing
-        // if(this.songPlaying === false){
-        //     this.battleSong.play()
-        //     this.songPlaying = true
-        // }
-
-        const minDistanceThreshold = 100; // Adjust the threshold value as needed
+        const minDistanceThreshold = 100 // Adjust the threshold value as needed
 
         // Check the distance between players
-        const distanceX = Math.abs(this.player1.x - this.player2.x);
+        const distanceX = Math.abs(this.player1.x - this.player2.x)
 
         if (distanceX < minDistanceThreshold) {
             // Players are too close, adjust their positions to maintain separation
-            const offsetX = minDistanceThreshold - distanceX;
+            const offsetX = minDistanceThreshold - distanceX
 
             if (this.player1.x < this.player2.x) {
-                this.player1.x -= offsetX / 2;
-                this.player2.x += offsetX / 2;
+                this.player1.x -= offsetX / 2
+                this.player2.x += offsetX / 2
             } else {
-                this.player1.x += offsetX / 2;
-                this.player2.x -= offsetX / 2;
+                this.player1.x += offsetX / 2
+                this.player2.x -= offsetX / 2
             }
 
         }
@@ -241,38 +215,11 @@ class Play extends Phaser.Scene {
         if(this.player1.currentHealth == 0){
 
             this.p2Wins += 1
-            // let snapshotKey = 'titlesnapshot';
-
-            // // Create a screenshot
-            // this.textures.once('addtexture', function (key, texture) {
-            //     if (key === snapshotKey) {
-            //         // Add the image to the scene
-            //         this.add.image(this.game.config.width / 2, this.game.config.height / 2, snapshotKey);
-            //     }
-            // }, this);
-
-            // // Add the snapshot image to the textures manager
-            // this.textures.addBase64(snapshotKey, this.game.renderer.snapshotArea(0, 0, this.game.config.width, this.game.config.height))
-
-
             this.gameOver = true
         }
 
         if(this.player2.currentHealth == 0){
             this.p1Wins += 1
-            // let snapshotKey = 'titlesnapshot';
-
-            // // Create a screenshot
-            // this.textures.once('addtexture', function (key, texture) {
-            //     if (key === snapshotKey) {
-            //         // Add the image to the scene
-            //         this.add.image(this.game.config.width / 2, this.game.config.height / 2, snapshotKey);
-            //     }
-            // }, this);
-
-            // // Add the snapshot image to the textures manager
-            // this.textures.addBase64(snapshotKey, this.game.renderer.snapshotArea(0, 0, this.game.config.width, this.game.config.height))
-
             this.gameOver = true
         }
 
@@ -436,10 +383,6 @@ class Play extends Phaser.Scene {
                 
     
             })
-
-            //play ref animation
-
-            
 
         })
 

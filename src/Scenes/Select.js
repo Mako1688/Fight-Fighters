@@ -294,7 +294,7 @@ class Select extends Phaser.Scene {
                         p2Wins: 0,
                         songPlaying: false
                     })
-                }.bind(this) // Ensure 'this' refers to the current scene inside the onComplete callback
+                }.bind(this)
             })
         }
 

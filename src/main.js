@@ -2,7 +2,11 @@
 // Name: Marco Ogaz-Vega
 // Date: 2/20/24
 /*
-Approx hours: 60 or more I lost count
+Approx hours: 70 or more I lost count
+Character sprites as well as explosion sprite taken from gravity Falls animator Paul Robertson
+Every other sprite created by me
+Sounds created by me other than the explosion and music sounds
+All code created by me except for statemachine by Nathan Altice
 */
 
 'use strict'

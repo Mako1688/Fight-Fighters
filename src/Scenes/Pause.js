@@ -29,7 +29,7 @@ class Pause extends Phaser.Scene {
 
         // Add a generic keyboard listener to check for any key press
         this.input.keyboard.on('keydown', function (event) {
-            console.log('Key pressed:', event.key);
+            console.log('Key pressed:', event.key)
         })
 
         this.borderPadding = 50
