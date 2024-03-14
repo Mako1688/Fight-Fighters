@@ -226,6 +226,23 @@ class MoveState2 extends State2 {
 
         player.body.setSize(60, 120).setOffset(30, 0)
         player.setOrigin(0.5, 1)
+
+        //delete hitboxes if applicable
+        if(player.punchHitbox){
+            player.disableHitbox(player.punchHitbox, scene)
+        } 
+        if (player.downPunchHitbox) {
+            player.disableHitbox(player.downPunchHitbox, scene)
+        } 
+        if (player.kickHitbox) {
+            player.disableHitbox(player.kickHitbox, scene)
+        } 
+        if(player.downKickHitbox) {
+            player.disableHitbox(player.downKickHitbox, scene)
+        } 
+        if (player.downSpecialHitbox){
+            player.disableHitbox(player.downSpecialHitbox, scene)
+        }
         
         // use destructuring to make a local copy of the keyboard object
         const left = scene.keys.LeftKey
@@ -327,6 +344,23 @@ class CrouchState2 extends State2 {
         player.setVelocity(0)
         player.anims.stop()
 
+        //delete hitboxes if applicable
+        if(player.punchHitbox){
+            player.disableHitbox(player.punchHitbox, scene)
+        } 
+        if (player.downPunchHitbox) {
+            player.disableHitbox(player.downPunchHitbox, scene)
+        } 
+        if (player.kickHitbox) {
+            player.disableHitbox(player.kickHitbox, scene)
+        } 
+        if(player.downKickHitbox) {
+            player.disableHitbox(player.downKickHitbox, scene)
+        } 
+        if (player.downSpecialHitbox){
+            player.disableHitbox(player.downSpecialHitbox, scene)
+        }
+
         //play crouch animation
         player.anims.play(`${player.char}_crouch`)
 
@@ -404,6 +438,23 @@ class BlockState2 extends State2 {
 
         player.body.setSize(60, 120).setOffset(0, 0)
         player.setOrigin(0.5, 1)
+
+        //delete hitboxes if applicable
+        if(player.punchHitbox){
+            player.disableHitbox(player.punchHitbox, scene)
+        } 
+        if (player.downPunchHitbox) {
+            player.disableHitbox(player.downPunchHitbox, scene)
+        } 
+        if (player.kickHitbox) {
+            player.disableHitbox(player.kickHitbox, scene)
+        } 
+        if(player.downKickHitbox) {
+            player.disableHitbox(player.downKickHitbox, scene)
+        } 
+        if (player.downSpecialHitbox){
+            player.disableHitbox(player.downSpecialHitbox, scene)
+        }
 
         //play crouch animation
         player.anims.play(`${player.char}_block`)
@@ -495,6 +546,23 @@ class PunchState2 extends State2 {
 
         // Clear existing animation update event listeners
         player.off('animationupdate')
+
+        //delete hitboxes if applicable
+        if(player.punchHitbox){
+            player.disableHitbox(player.punchHitbox, scene)
+        } 
+        if (player.downPunchHitbox) {
+            player.disableHitbox(player.downPunchHitbox, scene)
+        } 
+        if (player.kickHitbox) {
+            player.disableHitbox(player.kickHitbox, scene)
+        } 
+        if(player.downKickHitbox) {
+            player.disableHitbox(player.downKickHitbox, scene)
+        } 
+        if (player.downSpecialHitbox){
+            player.disableHitbox(player.downSpecialHitbox, scene)
+        }
 
         //adjust hitbox
         player.body.setOffset(60, 0)
@@ -613,6 +681,23 @@ class DownPunchState2 extends State2 {
         // Clear existing animation update event listeners
         player.off('animationupdate')
 
+        //delete hitboxes if applicable
+        if(player.punchHitbox){
+            player.disableHitbox(player.punchHitbox, scene)
+        } 
+        if (player.downPunchHitbox) {
+            player.disableHitbox(player.downPunchHitbox, scene)
+        } 
+        if (player.kickHitbox) {
+            player.disableHitbox(player.kickHitbox, scene)
+        } 
+        if(player.downKickHitbox) {
+            player.disableHitbox(player.downKickHitbox, scene)
+        } 
+        if (player.downSpecialHitbox){
+            player.disableHitbox(player.downSpecialHitbox, scene)
+        }
+
         player.body.setSize(60, 120).setOffset(30, 0)
         player.setOrigin(0.5, 1)
 
@@ -638,6 +723,12 @@ class DownPunchState2 extends State2 {
             })
         } else if(player.char === 'k'){
             player.anims.play('k_punch')
+            //makes hitbox
+            console.log('punch hitbox created')
+            player.punchHitbox = player.createHitbox(player.customHitboxes.punch, scene)
+            player.enableHitbox(player.punchHitbox, scene)
+            console.log(player.punchHitbox)
+            
             //create hitbox on frame 2 of animation
             player.on('animationupdate', (anim, frame) => {
                 if(anim.key === 'k_punch') {
@@ -688,7 +779,12 @@ class DownPunchState2 extends State2 {
 
         //transition to down special if special key pressed
         if(Phaser.Input.Keyboard.JustDown(special) && scene.p2Cancel == true){
-            player.disableHitbox(player.downPunchHitbox, scene)
+            if(player.downPunchHitbox){
+                player.disableHitbox(player.downPunchHitbox, scene)
+            } else if(player.punchHitbox){
+                player.disableHitbox(player.punchHitbox, scene)
+            }
+            
             this.stateMachine.transition('downSpecial')
             return
         }
@@ -704,6 +800,23 @@ class KickState2 extends State2 {
 
         // Clear existing animation update event listeners
         player.off('animationupdate')
+
+        //delete hitboxes if applicable
+        if(player.punchHitbox){
+            player.disableHitbox(player.punchHitbox, scene)
+        } 
+        if (player.downPunchHitbox) {
+            player.disableHitbox(player.downPunchHitbox, scene)
+        } 
+        if (player.kickHitbox) {
+            player.disableHitbox(player.kickHitbox, scene)
+        } 
+        if(player.downKickHitbox) {
+            player.disableHitbox(player.downKickHitbox, scene)
+        } 
+        if (player.downSpecialHitbox){
+            player.disableHitbox(player.downSpecialHitbox, scene)
+        }
 
         //adjust hitbox
         player.body.setOffset(60, 0)
@@ -803,6 +916,23 @@ class DownKickState2 extends State2 {
         // Clear existing animation update event listeners
         player.off('animationupdate')
 
+        //delete hitboxes if applicable
+        if(player.punchHitbox){
+            player.disableHitbox(player.punchHitbox, scene)
+        } 
+        if (player.downPunchHitbox) {
+            player.disableHitbox(player.downPunchHitbox, scene)
+        } 
+        if (player.kickHitbox) {
+            player.disableHitbox(player.kickHitbox, scene)
+        } 
+        if(player.downKickHitbox) {
+            player.disableHitbox(player.downKickHitbox, scene)
+        } 
+        if (player.downSpecialHitbox){
+            player.disableHitbox(player.downSpecialHitbox, scene)
+        }
+
         if(player.char === 'r'){
             //play animation
             player.anims.play('r_down_kick')
@@ -872,7 +1002,11 @@ class DownKickState2 extends State2 {
         //play down kick animation transition to idle when finished
         //transition to down special if special key pressed
         if(Phaser.Input.Keyboard.JustDown(special) && scene.p2Cancel == true){
-            player.disableHitbox(player.downKickHitbox, scene)
+            if(player.downKickHitbox){
+                player.disableHitbox(player.downKickHitbox, scene)
+            } else if(player.kickHitbox){
+                player.disableHitbox(player.kickHitbox, scene)
+            }
             this.stateMachine.transition('downSpecial')
             return
         }
@@ -888,6 +1022,20 @@ class SpecialState2 extends State2 {
 
         // Clear existing animation update event listeners
         player.off('animationupdate')
+
+        //delete hitboxes if applicable
+        if(player.punchHitbox){
+            player.disableHitbox(player.punchHitbox, scene)
+        } 
+        if (player.downPunchHitbox) {
+            player.disableHitbox(player.downPunchHitbox, scene)
+        } 
+        if (player.kickHitbox) {
+            player.disableHitbox(player.kickHitbox, scene)
+        } 
+        if(player.downKickHitbox) {
+            player.disableHitbox(player.downKickHitbox, scene)
+        } 
 
         if(player.char === 'r'){
             player.anims.play('r_special')
@@ -957,6 +1105,22 @@ class DownSpecialState2 extends State2 {
 
         // Clear existing animation update event listeners
         player.off('animationupdate')
+
+        if(player.punchHitbox){
+            player.disableHitbox(player.punchHitbox, scene)
+        } 
+        if (player.downPunchHitbox) {
+            player.disableHitbox(player.downPunchHitbox, scene)
+        } 
+        if (player.kickHitbox) {
+            player.disableHitbox(player.kickHitbox, scene)
+        } 
+        if(player.downKickHitbox) {
+            player.disableHitbox(player.downKickHitbox, scene)
+        } 
+        if (player.downSpecialHitbox){
+            player.disableHitbox(player.downSpecialHitbox, scene)
+        }
 
         if(player.char === 'r'){
             player.setVelocityX(-100)
