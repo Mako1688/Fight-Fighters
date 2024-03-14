@@ -160,33 +160,81 @@ class Load extends Phaser.Scene {
 
         //load Dr Karate Sprite sheets
         this.load.spritesheet('karate_idle', './assets/SpriteSheets/Karate_Idle.png', {
-            frameWidth: 136,
-            frameHeight: 144,
+            frameWidth: 100,
+            frameHeight: 120,
             startFrame:  0,
             endFrames: 5
         })
 
         this.load.spritesheet('karate_punch', './assets/SpriteSheets/Karate_Punch.png', {
-            frameWidth: 184,
-            frameHeight: 152,
+            frameWidth: 155,
+            frameHeight: 120,
             startFrame:  0,
             endFrames: 6
         })
 
         this.load.spritesheet('karate_kick', './assets/SpriteSheets/Karate_Kick.png', {
-            frameWidth: 200,
-            frameHeight: 144,
+            frameWidth: 160,
+            frameHeight: 130,
             startFrame:  0,
             endFrames: 8
         })
         
         this.load.spritesheet('karate_walk', './assets/SpriteSheets/Karate_Walk.png', {
-            frameWidth: 137,
-            frameHeight: 152,
+            frameWidth: 100,
+            frameHeight: 125,
             startFrame:  0,
             endFrames: 5
         })
+
+        this.load.spritesheet('karate_block', './assets/SpriteSheets/Karate_Block.png', {
+            frameWidth: 100,
+            frameHeight: 140,
+            startFrame:  0,
+            endFrames: 3
+        })
+
+        this.load.spritesheet('karate_special', './assets/SpriteSheets/Karate_Special.png', {
+            frameWidth: 100,
+            frameHeight: 140,
+            startFrame:  0,
+            endFrames: 9
+        })
+
+        this.load.spritesheet('laser', './assets/SpriteSheets/Laser.png', {
+            frameWidth: 50,
+            frameHeight: 20,
+            startFrame:  0,
+            endFrames: 1
+        })
+
+        this.load.spritesheet('karate_down_special', './assets/SpriteSheets/Karate_Special2.png', {
+            frameWidth: 160,
+            frameHeight: 130,
+            startFrame:  0,
+            endFrames: 13
+        })
+
+        this.load.spritesheet('karate_hurt', './assets/SpriteSheets/Karate_Hurt.png', {
+            frameWidth: 100,
+            frameHeight: 130,
+            startFrame:  0,
+            endFrames: 6
+        })
+
+        this.load.spritesheet('karate_crouch', './assets/SpriteSheets/Karate_Crouch.png', {
+            frameWidth: 100,
+            frameHeight: 120,
+            startFrame:  0,
+            endFrames: 1
+        })
         
+        this.load.spritesheet('karate_win', './assets/SpriteSheets/Karate_Win.png', {
+            frameWidth: 100,
+            frameHeight: 130,
+            startFrame:  0,
+            endFrames: 7
+        })
     }
 
     create() {
@@ -379,7 +427,8 @@ class Load extends Phaser.Scene {
                 end: 5, 
                 first: 0
             }),
-            frameRate: 6
+            frameRate: 6,
+            repeat: -1
         })
 
         this.anims.create({
@@ -409,7 +458,80 @@ class Load extends Phaser.Scene {
                 end: 5, 
                 first: 0
             }),
+            frameRate: 12,
+            repeat: -1
+        })
+
+        this.anims.create({
+            key: 'k_block',
+            frames: this.anims.generateFrameNumbers('karate_block', { 
+                start: 0, 
+                end: 3, 
+                first: 0
+            }),
             frameRate: 12
+        })
+
+        this.anims.create({
+            key: 'k_special',
+            frames: this.anims.generateFrameNumbers('karate_special', { 
+                start: 0, 
+                end: 9, 
+                first: 0
+            }),
+            frameRate: 12
+        })
+
+        this.anims.create({
+            key: 'laser_anim',
+            frames: this.anims.generateFrameNumbers('laser', { 
+                start: 0, 
+                end: 1, 
+                first: 0
+            }),
+            repeat: -1,
+            frameRate: 12,
+        })
+
+        this.anims.create({
+            key: 'k_down_special',
+            frames: this.anims.generateFrameNumbers('karate_down_special', { 
+                start: 0, 
+                end: 13, 
+                first: 0
+            }),
+            frameRate: 12
+        })
+
+        this.anims.create({
+            key: 'k_hurt',
+            frames: this.anims.generateFrameNumbers('karate_hurt', { 
+                start: 0, 
+                end: 6, 
+                first: 0
+            }),
+            frameRate: 12
+        })
+
+        this.anims.create({
+            key: 'k_crouch',
+            frames: this.anims.generateFrameNumbers('karate_crouch', { 
+                start: 0, 
+                end: 1, 
+                first: 0
+            }),
+            frameRate: 12
+        })
+
+        this.anims.create({
+            key: 'k_win',
+            frames: this.anims.generateFrameNumbers('karate_win', { 
+                start: 0, 
+                end: 7, 
+                first: 0
+            }),
+            frameRate: 12,
+            repeat: -1
         })
     }
 

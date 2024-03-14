@@ -11,6 +11,12 @@ class Player2 extends Phaser.Physics.Arcade.Sprite {
         this.setOrigin(0.5, 1)
         // this.body.immovable = true
 
+        if(texture === 'rumble_idle'){
+            this.char = 'r'
+        }else if(texture === 'karate_idle'){
+            this.char = 'k'
+        }
+
         // Define custom hitbox properties for different animations
         this.customHitboxes = {
             punch: { width: 200, height: 30, offsetX: -45, offsetY: -140},
@@ -18,6 +24,14 @@ class Player2 extends Phaser.Physics.Arcade.Sprite {
             kick: { width: this.body.width * 2, height: this.body.height * 2, offsetX: -50, offsetY: -100 },
             downkick: { width: 200, height: 120, offsetX: -60, offsetY: -120 },
             downspecial: { width: this.body.width * 2, height: this.body.height * 2, offsetX: -50, offsetY: -160 }
+            // Add more animations as needed
+        }
+
+        //define custome hitboxes for Dr Karate
+        this.customHitboxes2 = {
+            punch: { width: 200, height: 30, offsetX: -45, offsetY: -140},
+            kick: { width: this.body.width * 2, height: this.body.height * 2, offsetX: -70, offsetY: -100 },
+            downspecial: { width: this.body.width * 3, height: this.body.height * 2, offsetX: -80, offsetY: -160 }
             // Add more animations as needed
         }
         
@@ -124,11 +138,12 @@ class IdleState2 extends State2 {
     enter(scene, player) {
         console.log("p2 idle")
         //stop [player]
+        player.setVelocity(0)
         
         player.anims.stop()
 
         //play idle animation
-        player.anims.play('r_idle', true)
+        player.anims.play(`${player.char}_idle`, true)
 
         player.body.setSize(60, 120).setOffset(30, 0)
         player.setOrigin(0.5, 1)
@@ -224,18 +239,20 @@ class MoveState2 extends State2 {
         // handle movement
         if(left.isDown){
             //play walk animation backwards
-            player.anims.playReverse('r_walk', true)
+            player.anims.play(`${player.char}_walk`, true)
             //set velocity
             player.setVelocityX(-275)
 
-            
+                
         }else if(right.isDown) {
             //play walk animation forwards
-            player.anims.play('r_walk', true)
+            player.anims.playReverse(`${player.char}_walk`, true)
             //set velocity
             player.setVelocityX(275)
 
         }
+        
+        
         
     }
     execute(scene, player) {
@@ -288,14 +305,14 @@ class MoveState2 extends State2 {
         // handle movement
         if(left.isDown){
             //play walk animation backwards
-            player.anims.playReverse('r_walk', true)
+            player.anims.play(`${player.char}_walk`, true)
             //set velocity
             player.setVelocityX(-275)
 
-            
+                
         }else if(right.isDown) {
             //play walk animation forwards
-            player.anims.play('r_walk', true)
+            player.anims.playReverse(`${player.char}_walk`, true)
             //set velocity
             player.setVelocityX(275)
 
@@ -311,7 +328,7 @@ class CrouchState2 extends State2 {
         player.anims.stop()
 
         //play crouch animation
-        player.anims.play('r_crouch')
+        player.anims.play(`${player.char}_crouch`)
 
         //change body hurtbox
         player.body.setSize(60, 60).setOffset(0, 60)
@@ -389,7 +406,7 @@ class BlockState2 extends State2 {
         player.setOrigin(0.5, 1)
 
         //play crouch animation
-        player.anims.play('r_block')
+        player.anims.play(`${player.char}_block`)
 
         //make immune to hits
         scene.p2Hittable = false
@@ -410,8 +427,15 @@ class BlockState2 extends State2 {
         const special = scene.keys.ColonKey
         const block = scene.keys.PeriodKey
 
-        // Pause the crouch animation on the last frame
-        player.anims.pause(player.anims.currentAnim.frames[2])
+        if(player.char === 'r'){
+            // Pause the block animation on the last frame
+            player.anims.pause(player.anims.currentAnim.frames[2])
+        }
+
+        if(player.char === 'k'){
+            // Pause the block animation on the last frame
+            player.anims.pause(player.anims.currentAnim.frames[3])
+        }
 
         // transition to idle if release crouch key
         if(Phaser.Input.Keyboard.JustUp(block)) {
@@ -472,11 +496,11 @@ class PunchState2 extends State2 {
         // Clear existing animation update event listeners
         player.off('animationupdate')
 
-        //play animation
-        player.anims.play('r_punch')
-
         //adjust hitbox
         player.body.setOffset(60, 0)
+
+        //play animation
+        player.anims.play(`${player.char}_punch`)
 
         //makes hitbox
         console.log('punch hitbox created')
@@ -484,29 +508,55 @@ class PunchState2 extends State2 {
         player.enableHitbox(player.punchHitbox, scene)
         console.log(player.punchHitbox)
 
-        //create hitbox on frame 2 of animation
-        player.on('animationupdate', (anim, frame) => {
-            if(anim.key === 'r_punch') {
-                if (frame.index === 2) {
-                    console.log('punch hitbox destroyed')
-                    player.disableHitbox(player.punchHitbox, scene)
+        if(player.char === 'r'){
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'r_punch') {
+                    if (frame.index === 2) {
+                        console.log('punch hitbox destroyed')
+                        player.disableHitbox(player.punchHitbox, scene)
+                    }
                 }
-            }
-        })
+            })
 
-        //create hitbox on frame 2 of animation
-        player.on('animationupdate', (anim, frame) => {
-            if(anim.key === 'r_punch') {
-                if (frame.index === 4) {
-                    console.log('punch hitbox 2 created')
-                    player.punchHitbox = player.createHitbox(player.customHitboxes.punch, scene)
-                    player.enableHitbox(player.punchHitbox, scene)
-                } else if(frame.index === 6){
-                    console.log('punch hitbox 2 destroyed')
-                    player.disableHitbox(player.punchHitbox, scene)
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'r_punch') {
+                    if (frame.index === 4) {
+                        console.log('punch hitbox 2 created')
+                        player.punchHitbox = player.createHitbox(player.customHitboxes.punch, scene)
+                        player.enableHitbox(player.punchHitbox, scene)
+                    } else if(frame.index === 6){
+                        console.log('punch hitbox 2 destroyed')
+                        player.disableHitbox(player.punchHitbox, scene)
+                    }
                 }
-            }
-        })
+            })
+        } else if(player.char === 'k'){
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'k_punch') {
+                    if (frame.index === 2) {
+                        console.log('punch hitbox destroyed')
+                        player.disableHitbox(player.punchHitbox, scene)
+                    }
+                }
+            })
+
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'k_punch') {
+                    if (frame.index === 3) {
+                        console.log('punch hitbox 2 created')
+                        player.punchHitbox = player.createHitbox(player.customHitboxes2.punch, scene)
+                        player.enableHitbox(player.punchHitbox, scene)
+                    } else if(frame.index === 5){
+                        console.log('punch hitbox 2 destroyed')
+                        player.disableHitbox(player.punchHitbox, scene)
+                    }
+                }
+            })
+        }
 
         //play punch animation transition to idle when finished
         player.once('animationcomplete', () => {    //callback after anim completes
@@ -566,24 +616,52 @@ class DownPunchState2 extends State2 {
         player.body.setSize(60, 120).setOffset(30, 0)
         player.setOrigin(0.5, 1)
 
-        //play animation
-        player.anims.play('r_down_punch')
+        
+        if(player.char === 'r'){
+            //play animation
+            player.anims.play('r_down_punch')
 
-        //create hitbox on frame 2 of animation
-        player.on('animationupdate', (anim, frame) => {
-            if(anim.key === 'r_down_punch') {
-                //create on 3rd frame
-                if (frame.index === 2) {
-                    console.log('down punch hitbox created')
-                    player.downPunchHitbox = player.createHitbox(player.customHitboxes.downpunch, scene)
-                    player.enableHitbox(player.downPunchHitbox, scene)
-                //destroy on 6th frame
-                } else if (frame.index === 4) {
-                    console.log('down punch hitbox destroyed')
-                    player.disableHitbox(player.downPunchHitbox, scene)
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'r_down_punch') {
+                    //create on 3rd frame
+                    if (frame.index === 2) {
+                        console.log('down punch hitbox created')
+                        player.downPunchHitbox = player.createHitbox(player.customHitboxes.downpunch, scene)
+                        player.enableHitbox(player.downPunchHitbox, scene)
+                    //destroy on 6th frame
+                    } else if (frame.index === 4) {
+                        console.log('down punch hitbox destroyed')
+                        player.disableHitbox(player.downPunchHitbox, scene)
+                    }
                 }
-            }
-        })
+            })
+        } else if(player.char === 'k'){
+            player.anims.play('k_punch')
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'k_punch') {
+                    if (frame.index === 2) {
+                        console.log('punch hitbox destroyed')
+                        player.disableHitbox(player.punchHitbox, scene)
+                    }
+                }
+            })
+
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'k_punch') {
+                    if (frame.index === 3) {
+                        console.log('punch hitbox 2 created')
+                        player.punchHitbox = player.createHitbox(player.customHitboxes2.punch, scene)
+                        player.enableHitbox(player.punchHitbox, scene)
+                    } else if(frame.index === 5){
+                        console.log('punch hitbox 2 destroyed')
+                        player.disableHitbox(player.punchHitbox, scene)
+                    }
+                }
+            })
+        }
 
         //play  down punch animation transition to idle when finished
         player.once('animationcomplete', () => {    //callback after anim completes
@@ -627,27 +705,45 @@ class KickState2 extends State2 {
         // Clear existing animation update event listeners
         player.off('animationupdate')
 
-        //play kick
-        player.anims.play('r_kick')
-
         //adjust hitbox
         player.body.setOffset(60, 0)
 
-        //create hitbox on frame 2 of animation
-        player.on('animationupdate', (anim, frame) => {
-            if(anim.key === 'r_kick') {
-                //create on 3rd frame
-                if (frame.index === 2) {
-                    console.log('kick hitbox created')
-                    player.kickHitbox = player.createHitbox(player.customHitboxes.kick, scene)
-                    player.enableHitbox(player.kickHitbox, scene)
-                //destroy on 6th frame
-                } else if (frame.index === 5) {
-                    console.log('kick hitbox destroyed')
-                    player.disableHitbox(player.kickHitbox, scene)
+        //play kick
+        player.anims.play(`${player.char}_kick`)
+
+        if(player.char === 'r'){
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'r_kick') {
+                    //create on 3rd frame
+                    if (frame.index === 2) {
+                        console.log('kick hitbox created')
+                        player.kickHitbox = player.createHitbox(player.customHitboxes.kick, scene)
+                        player.enableHitbox(player.kickHitbox, scene)
+                    //destroy on 6th frame
+                    } else if (frame.index === 5) {
+                        console.log('kick hitbox destroyed')
+                        player.disableHitbox(player.kickHitbox, scene)
+                    }
                 }
-            }
-        })
+            })
+        } else if(player.char === 'k'){
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'k_kick') {
+                    //create on 3rd frame
+                    if (frame.index === 3) {
+                        console.log('kick hitbox created')
+                        player.kickHitbox = player.createHitbox(player.customHitboxes2.kick, scene)
+                        player.enableHitbox(player.kickHitbox, scene)
+                    //destroy on 6th frame
+                    } else if (frame.index === 6) {
+                        console.log('kick hitbox destroyed')
+                        player.disableHitbox(player.kickHitbox, scene)
+                    }
+                }
+            })
+        }
 
         
         player.once('animationcomplete', () => {    //callback after anim completes
@@ -707,31 +803,50 @@ class DownKickState2 extends State2 {
         // Clear existing animation update event listeners
         player.off('animationupdate')
 
-        //play animation
-        player.anims.play('r_down_kick')
+        if(player.char === 'r'){
+            //play animation
+            player.anims.play('r_down_kick')
 
-        //create hitbox on frame 2 of animation
-        player.on('animationupdate', (anim, frame) => {
-            if(anim.key === 'r_down_kick') {
-                //create on 3rd frame
-                if (frame.index === 5) {
-                    console.log('downkick hitbox created')
-                    player.downKickHitbox = player.createHitbox(player.customHitboxes.downkick, scene)
-                    player.enableHitbox(player.downKickHitbox, scene)
-                //destroy on 6th frame
-                } else if (frame.index === 7) {
-                    console.log('downkick hitbox destroyed')
-                    player.disableHitbox(player.downKickHitbox, scene)
-                } else if (frame.index === 10) {
-                    console.log('downkick hitbox created')
-                    player.downKickHitbox = player.createHitbox(player.customHitboxes.downkick, scene)
-                    player.enableHitbox(player.downKickHitbox, scene)
-                } else if (frame.index === 12) {
-                    console.log('downkick hitbox destroyed')
-                    player.disableHitbox(player.downKickHitbox, scene)
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'r_down_kick') {
+                    //create on 3rd frame
+                    if (frame.index === 5) {
+                        console.log('downkick hitbox created')
+                        player.downKickHitbox = player.createHitbox(player.customHitboxes.downkick, scene)
+                        player.enableHitbox(player.downKickHitbox, scene)
+                    //destroy on 6th frame
+                    } else if (frame.index === 7) {
+                        console.log('downkick hitbox destroyed')
+                        player.disableHitbox(player.downKickHitbox, scene)
+                    } else if (frame.index === 10) {
+                        console.log('downkick hitbox created')
+                        player.downKickHitbox = player.createHitbox(player.customHitboxes.downkick, scene)
+                        player.enableHitbox(player.downKickHitbox, scene)
+                    } else if (frame.index === 12) {
+                        console.log('downkick hitbox destroyed')
+                        player.disableHitbox(player.downKickHitbox, scene)
+                    }
                 }
-            }
-        })
+            })
+        }else if(player.char === 'k'){
+            player.anims.play('k_kick')
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'k_kick') {
+                    //create on 3rd frame
+                    if (frame.index === 3) {
+                        console.log('kick hitbox created')
+                        player.kickHitbox = player.createHitbox(player.customHitboxes2.kick, scene)
+                        player.enableHitbox(player.kickHitbox, scene)
+                    //destroy on 6th frame
+                    } else if (frame.index === 6) {
+                        console.log('kick hitbox destroyed')
+                        player.disableHitbox(player.kickHitbox, scene)
+                    }
+                }
+            })
+        }
         
         player.once('animationcomplete', () => {    //callback after anim completes
             //adjust hitbox
@@ -774,29 +889,57 @@ class SpecialState2 extends State2 {
         // Clear existing animation update event listeners
         player.off('animationupdate')
 
-        player.anims.play('r_special')
+        if(player.char === 'r'){
+            player.anims.play('r_special')
 
-        //create hitbox on frame 2 of animation
-        player.on('animationupdate', (anim, frame) => {
-            if(anim.key === 'r_special') {
-                //create on 3rd frame
-                if (frame.index === 4) {
-                    scene.fireball2 = scene.physics.add.sprite(player.x, player.height + 280, 'fireball', 0).setFlipX(true)
-                    scene.fireball2.body.setSize(70, 10)
-                    scene.fireball2.anims.play('fireball_anim', true)
-                    scene.fireball2.setVelocityX(-500)
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'r_special') {
+                    //create on 3rd frame
+                    if (frame.index === 4) {
+                        scene.fireball2 = scene.physics.add.sprite(player.x, player.height + 280, 'fireball', 0).setFlipX(true)
+                        scene.fireball2.body.setSize(70, 10)
+                        scene.fireball2.anims.play('fireball_anim', true)
+                        scene.fireball2.setVelocityX(-500)
+                    }
                 }
-            }
-        })
+            })
 
-        player.once('animationcomplete', () => {    //callback after anim completes
-            if(scene.fireball2 && scene.fireball2.x < 0){
-                scene.fireball2.destroy()
-            }
-            scene.p2Cancel = false
-            this.stateMachine.transition('idle')
-            return
-        })
+            player.once('animationcomplete', () => {    //callback after anim completes
+                if(scene.fireball2 && scene.fireball2.x < 0){
+                    scene.fireball2.destroy()
+                }
+                scene.p2Cancel = false
+                this.stateMachine.transition('idle')
+                return
+            })
+        }else if(player.char === 'k'){
+            player.anims.play('k_special')
+
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'k_special') {
+                    //create on 3rd frame
+                    if (frame.index === 8) {
+                        scene.fireball2 = scene.physics.add.sprite(player.x, player.y - 220, 'laser', 0).setFlipX(true)
+                        scene.fireball2.body.setSize(50, 10)
+                        scene.fireball2.anims.play('laser_anim', true)
+                        scene.fireball2.setVelocityX(-1000)
+                    }
+                }
+            })
+
+            player.once('animationcomplete', () => {    //callback after anim completes
+                if(scene.fireball2 && scene.fireball2.x < 0){
+                    scene.fireball2.destroy()
+                }
+                scene.p2Cancel = false
+                this.stateMachine.transition('idle')
+                return
+            })
+        }
+
+        
     }
 
     execute(scene, player) {
@@ -809,47 +952,85 @@ class DownSpecialState2 extends State2 {
     enter(scene, player) {
         console.log("p2 downspecial")
         player.setVelocity(0)
-        player.setVelocityX(-100)
+        
         player.anims.stop()
 
         // Clear existing animation update event listeners
         player.off('animationupdate')
 
-        //play animation
-        player.anims.play('r_down_special')
+        if(player.char === 'r'){
+            player.setVelocityX(-100)
+            //play animation
+            player.anims.play('r_down_special')
 
-        scene.p2Hittable = false
+            scene.p2Hittable = false
 
 
-        //create hitbox on frame 2 of animation
-        player.on('animationupdate', (anim, frame) => {
-            if(anim.key === 'r_down_special') {
-                //create on 3rd frame
-                if (frame.index === 2) {
-                    console.log('downspecial hitbox created')
-                    player.downSpecialHitbox = player.createHitbox(player.customHitboxes.downspecial, scene)
-                    player.enableHitbox(player.downSpecialHitbox, scene)
-                //destroy on 6th frame
-                } else if (frame.index === 4) {
-                    console.log('downspecial hitbox destroyed')
-                    player.disableHitbox(player.downSpecialHitbox, scene)
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'r_down_special') {
+                    //create on 3rd frame
+                    if (frame.index === 2) {
+                        console.log('downspecial hitbox created')
+                        player.downSpecialHitbox = player.createHitbox(player.customHitboxes.downspecial, scene)
+                        player.enableHitbox(player.downSpecialHitbox, scene)
+                    //destroy on 6th frame
+                    } else if (frame.index === 4) {
+                        console.log('downspecial hitbox destroyed')
+                        player.disableHitbox(player.downSpecialHitbox, scene)
+                    }
                 }
-            }
-        })
+            })
 
-        player.once('animationcomplete', () => {    //callback after anim completes
-            player.setVelocityX(0)
-            scene.p2Hittable = true
-            this.stateMachine.transition('idle')
-            return
-        })
+            player.once('animationcomplete', () => {    //callback after anim completes
+                player.setVelocityX(0)
+                scene.p2Hittable = true
+                this.stateMachine.transition('idle')
+                return
+            })
+        }else if(player.char === 'k'){
+            //play animation
+            player.anims.play('k_down_special')
+
+            //create hitbox on frame 2 of animation
+            player.on('animationupdate', (anim, frame) => {
+                if(anim.key === 'k_down_special') {
+                    //create on 3rd frame
+                    if (frame.index === 3) {
+
+                        console.log('downspecial hitbox created')
+                        player.downSpecialHitbox = player.createHitbox(player.customHitboxes2.downspecial, scene)
+                        player.enableHitbox(player.downSpecialHitbox, scene)
+                        player.setVelocityX(-700)
+                    //destroy on 6th frame
+                    } else if (frame.index === 10) {
+                        player.setVelocityX(0)
+                        console.log('downspecial hitbox destroyed')
+                        player.disableHitbox(player.downSpecialHitbox, scene)
+                    }
+                }
+            })
+
+            player.once('animationcomplete', () => {    //callback after anim completes
+                player.setVelocityX(0)
+                player.p1Hittable = true
+                this.stateMachine.transition('idle')
+                return
+            })
+        }
+
+        
 
         //enable hitbox for down special state
     }
 
     execute(scene, player) {
-        if(player.downSpecialHitbox){
+        if(player.downSpecialHitbox && player.char === 'r'){
             player.downSpecialHitbox.x -=1
+        }
+
+        if(player.downSpecialHitbox && player.char === 'k'){
+            player.downSpecialHitbox.x -=7
         }
 
     }
@@ -865,7 +1046,7 @@ class HurtState2 extends State2 {
         //move slightly away from other player
 
         //play hurt animation
-        player.anims.play('r_hurt')
+        player.anims.play(`${player.char}_hurt`)
 
         if(player.punchHitbox){
             player.disableHitbox(player.punchHitbox, scene)

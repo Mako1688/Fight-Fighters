@@ -40,7 +40,11 @@ class Play extends Phaser.Scene {
             this.scene.stop('pauseScene')
             this.scene.start('winScene', {
                 p1Wins: this.p1Wins,
-                p2Wins: this.p2Wins
+                p2Wins: this.p2Wins,
+                p1Karate: this.p1Karate,
+                p1Rumble: this.p1Rumble,
+                p2Karate: this.p2Karate,
+                p2Rumble: this.p2Rumble
             })
         }
         
@@ -96,18 +100,22 @@ class Play extends Phaser.Scene {
         //create players
         //bracket notation:
         //this[this.p1Rumble]
-        this.player1 = new Player1(this, game.config.width / 4, game.config.height / 5 * 4, 'rumble_idle', 0).setOrigin(0.5, 1).setScale(2)
-        this.player2 = new Player2(this, game.config.width / 4 * 3, game.config.height / 5 * 4, 'rumble_idle', 0).setOrigin(0.5, 1).setScale(2).setFlipX(true)
+        if(this.p1Rumble === true){
+            this.player1 = new Player1(this, game.config.width / 4, game.config.height / 5 * 4, 'rumble_idle', 0).setOrigin(0.5, 1).setScale(2)
+        }else if(this.p1Karate === true){
+            this.player1 = new Player1(this, game.config.width / 4, game.config.height / 5 * 4, 'karate_idle', 0).setOrigin(0.5, 1).setScale(2).setFlipX(true)
+        }
+        
+        if(this.p2Rumble === true) {
+            this.player2 = new Player2(this, game.config.width / 4 * 3, game.config.height / 5 * 4, 'rumble_idle', 0).setOrigin(0.5, 1).setScale(2).setFlipX(true)
+        }else if(this.p2Karate === true){
+            this.player2 = new Player2(this, game.config.width / 4 * 3, game.config.height / 5 * 4, 'karate_idle', 0).setOrigin(0.5, 1).setScale(2)
+        }
+        
 
         
         this.p1activeHitboxes = []
         this.p2activeHitboxes = []
-
-        // Enable physics for player1 and player2
-        this.physics.world.enable([this.player1, this.player2])
-
-        this.player1.setDepth(1)
-        this.player2.setDepth(1)
 
         console.log('Before overlap check')
         this.physics.world.overlap(this.player1, this.player2, this.handlePlayerCollision, null, this)
@@ -306,6 +314,10 @@ class Play extends Phaser.Scene {
             }
             // Set the flag to indicate that the hitbox has hit
             hitbox.hasHit = true
+        }
+        if(hitbox == this.fireball || hitbox == this.fireball2){
+            this.p1Cancel = false
+            this.p2Cancel = false
         }
     }
 
